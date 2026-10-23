@@ -32,7 +32,16 @@ Os modelos de [sessão](docs/modelos/sessao.md) e [decisão](docs/modelos/decisa
 
 ## Compartilhamento
 
-O projeto será mantido em um repositório público no GitHub, separado do repositório do site pessoal. A publicação do artigo no site será uma etapa posterior.
+O projeto está no repositório público [AlanHJH/gba-assembly-ai](https://github.com/AlanHJH/gba-assembly-ai), separado do repositório do site pessoal. A publicação do artigo no site será uma etapa posterior.
+
+Para acompanhar os arquivos localmente:
+
+```sh
+git clone https://github.com/AlanHJH/gba-assembly-ai.git
+cd gba-assembly-ai
+```
+
+Comece pelo plano e pelo diário. Ainda não há comando de construção do jogo validado.
 
 A licença de reutilização do código e da documentação ainda será definida. O projeto está em fase inicial e ainda não oferece um jogo pronto para baixar.
 

@@ -8,7 +8,7 @@ Atualizado em 23 de outubro de 2026. As etapas abaixo são uma proposta de execu
 - [x] Registrar o objetivo, o alvo inicial e o significado de assembly puro.
 - [x] Preparar diário, decisões, evidências e roteiro do artigo.
 - [x] Levantar o ambiente local e consultar referências iniciais.
-- [ ] Publicar e verificar o repositório público no GitHub.
+- [x] Publicar e verificar o repositório público no GitHub.
 
 ## 1. Ambiente reproduzível — pendente
 
