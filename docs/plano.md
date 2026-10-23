@@ -1,45 +1,35 @@
 # Plano de desenvolvimento
 
-Atualizado em 23 de outubro de 2026. As etapas abaixo são uma proposta de execução; somente a fundação documental está concluída.
+Atualizado em 23 de outubro de 2026. A proposta inicial evoluiu para a primeira versão jogável de Gateblade; a mecânica foi especificada pelo usuário antes da implementação.
 
-## 0. Fundação — concluída
+## Entregas concluídas localmente
 
-- [x] Separar o projeto do site pessoal.
-- [x] Registrar o objetivo, o alvo inicial e o significado de assembly puro.
-- [x] Preparar diário, decisões, evidências e roteiro do artigo.
-- [x] Levantar o ambiente local e consultar referências iniciais.
-- [x] Publicar e verificar o repositório público no GitHub.
+- [x] Projeto separado do site e repositório público no GitHub.
+- [x] Diário, decisões, referências e organização de evidências.
+- [x] Toolchain GNU Binutils para ARM7TDMI e geração de ROM.
+- [x] Cabeçalho de cartucho e startup próprios, sem runtime C.
+- [x] Cenário por tiles, sprites e gráficos originais gerados por script.
+- [x] Movimento, limites da sala e ataque de espada direcional.
+- [x] Dano, vida, invulnerabilidade e reinício após derrota.
+- [x] Três salas de inimigos comuns e portas condicionadas à eliminação de todos.
+- [x] Chefe com preparação, investida e recuperação.
+- [x] Travessia da última saída, vitória e nova campanha.
+- [x] Pausa e efeitos sonoros de ações.
+- [x] Nove grupos de teste na ROM real, incluindo campanha por botões sem escrita de estado.
+- [x] Demonstração capturada da ROM e roteiro de reprodução.
+- [x] Artigo completo em português, sujeito à revisão editorial do autor.
 
-## 1. Ambiente reproduzível — pendente
+## Distribuição e verificação remota
 
-Avaliar ferramentas GNU para ARM, inclusive a distribuição devkitARM, e o mGBA como emulador inicial. A escolha e o procedimento de instalação ainda precisam ser validados neste computador.
+A ROM e o SHA-256 são preparados por `make package`. O workflow de GitHub Actions executa construção e testes. O diário registra a publicação e o resultado remoto observado; não se infere sucesso apenas da existência do workflow.
 
-**Critério de conclusão:** registrar origem e versões das ferramentas, executar assembler, linker e conversor de binário e documentar como abrir uma ROM no emulador. Verificar a forma de preparar e validar o cabeçalho do cartucho. Não criar um tutorial de instalação a partir de comandos não testados.
+## Próximos passos opcionais
 
-## 2. Primeira ROM visual — pendente
+- Testar em console físico e registrar o equipamento e a ROM utilizados.
+- Fazer testes com jogadores e ajustar dificuldade a partir das observações.
+- Definir licença de reutilização do código e da documentação.
+- Refatorar configuração de encontros antes de aumentar o número de salas.
+- Adicionar obstáculos com colisão, padrões novos, música ou mais variedade visual.
+- Revisar o artigo e adaptar caminhos de imagens e título para a publicação no blog.
 
-Preparar cabeçalho, ponto de entrada, inicialização necessária, script de linkedição e geração do arquivo `.gba`. Como experimento inicial, considerar um preenchimento de tela ou uma pequena figura em modo bitmap. A escolha do modo de vídeo ainda é uma proposta.
-
-**Critério de conclusão:** reconstruir a ROM, inspecionar o resultado e observar no emulador a imagem esperada. Preservar os comandos, a identificação da ROM e uma captura. Registrar o que foi necessário para a inicialização, sem esconder isso em um runtime C.
-
-## 3. Entrada e atualização de tela — pendente
-
-Ler botões, definir uma atualização ligada ao quadro de vídeo e mover um elemento na tela. Investigar e documentar sincronização e limites de memória conforme forem necessários.
-
-**Critério de conclusão:** interação observável, comportamento previsível nos limites da tela e explicação das rotinas em assembly usadas nessa etapa.
-
-## 4. Jogo mínimo — pendente
-
-Escolher uma mecânica pequena que permita demonstrar objetivo, controle, condição de fim e reinício. Gênero, nome, arte, áudio, pontuação e uso de sprites ainda não foram definidos.
-
-**Critério de conclusão:** uma partida curta completa, com os controles e as limitações documentados. Separar o que foi testado em emulador de eventual teste em console físico.
-
-## 5. Reprodução e artigo — pendente
-
-Refazer o caminho com as instruções documentadas, revisar a origem dos recursos, escolher a licença e escrever o artigo a partir do diário e das decisões.
-
-**Critério de conclusão:** cada afirmação técnica e cada resultado descrito têm referência ou evidência; os comandos correspondem ao projeto publicado; as melhorias propostas aparecem como trabalho futuro. A integração no site ocorre depois da redação e revisão.
-
-## Escolhas ainda em aberto
-
-Toolchain e versões; sintaxe e organização dos arquivos; preparação do cabeçalho; uso de chamadas da BIOS; modo de vídeo; convenções de registradores e pilha; mecânica do jogo; recursos visuais e áudio; licença; idioma e extensão do artigo.
+O jogo, a ROM e o texto permanecem independentes do repositório do site. Nenhum artigo foi integrado ou publicado no blog durante esta implementação.

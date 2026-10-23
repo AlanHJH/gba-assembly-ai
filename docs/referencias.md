@@ -20,3 +20,15 @@ As páginas [Getting Started](https://devkitpro.org/wiki/Getting_Started) e [dev
 ## Como ampliar esta lista
 
 Ao usar um fato novo, registrar a fonte correspondente e o contexto. Ao usar código de terceiros, registrar também a origem e as condições de reutilização. Para instruções, registradores e formatos de ROM, conferir o detalhe pertinente antes de transformar uma sugestão em implementação.
+
+## Fontes usadas na implementação
+
+Consultadas na mesma data:
+
+- [Homebrew: arm-none-eabi-binutils](https://formulae.brew.sh/formula/arm-none-eabi-binutils) — distribuição dos utilitários; a versão realmente instalada foi 2.44.
+- [GNU ld: linker scripts](https://sourceware.org/binutils/docs/ld/Scripts.html) e [objcopy](https://sourceware.org/binutils/docs/binutils/objcopy.html) — disposição de seções e conversão do ELF.
+- [Tonc: backgrounds](https://gbadev.net/tonc/regbg.html), [sprites](https://gbadev.net/tonc/regobj.html), [vídeo](https://gbadev.net/tonc/video.html), [controles](https://gbadev.net/tonc/keys.html) e [DMA](https://gbadev.net/tonc/dma.html) — configuração gráfica, sincronização e entrada.
+- [mGBA 0.10.5: código de carregamento](https://github.com/mgba-emu/mgba/blob/0.10.5/src/gba/gba.c) — investigação de detecção de multiboot.
+- [mGBA 0.10.5: CMake](https://github.com/mgba-emu/mgba/blob/0.10.5/CMakeLists.txt), [version.cmake](https://github.com/mgba-emu/mgba/blob/0.10.5/version.cmake) e [libretro.h](https://github.com/mgba-emu/mgba/blob/0.10.5/src/platform/libretro/libretro.h) — configuração da construção e interface do frontend de testes; esses arquivos também foram lidos da distribuição verificada.
+
+As fontes do mGBA são dependência de desenvolvimento e preservam a licença própria upstream. Não foram incorporadas como código executável da ROM nem adicionadas ao histórico Git deste projeto.

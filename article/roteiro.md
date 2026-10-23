@@ -1,6 +1,6 @@
 # Roteiro provisório do artigo
 
-**Estado:** planejamento editorial; ainda não é um tutorial executável nem um artigo pronto para publicação. O idioma final será definido posteriormente.
+**Estado:** roteiro original preservado. A implementação e os resultados já foram descritos no [artigo completo em português](artigo.md). As linhas abaixo registram o plano anterior; o mapa de evidências atual está no artigo e em `docs/evidencias/2026-10-23/`.
 
 **Título de trabalho:** Criando um jogo de Game Boy Advance em assembly com ajuda de IA.
 

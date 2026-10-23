@@ -1,6 +1,6 @@
 # Evidências do desenvolvimento
 
-Esta pasta receberá capturas, logs curtos e resultados que sustentem as explicações do artigo. Ainda não há evidência de ROM construída ou executada.
+Esta pasta preserva capturas, logs curtos e resultados que sustentam as explicações do artigo. A primeira versão construída e executada está em [2026-10-23](2026-10-23/README.md), com relatório, campanha por botões e demonstração.
 
 Para cada resultado, registrar a data, o objetivo, a etapa ou revisão do código, os comandos e as versões relevantes. Quando houver uma ROM, incluir seu identificador ou hash para relacionar a captura ao artefato testado.
 

@@ -1,0 +1,45 @@
+{
+  "emulator": "mGBA 0.10.5 / libretro, built from verified upstream archive",
+  "rom_sha256": "34b957b7ff050f5ab07f6d9b7e9877b8b388ed337d83c29086580af5c2a4b1dc",
+  "rom_bytes": 14456,
+  "checks": [
+    "Valid cartridge header and non-multiboot entry",
+    "Title boots and exactly one update per VBlank",
+    "Movement boundaries and locked exit",
+    "Pause freezes gameplay and resumes",
+    "Directional sword, cooldown, one hit per swing and sound",
+    "Contact damage, invulnerability and stronger boss damage",
+    "Death and clean restart",
+    "Boss telegraph, charge and recovery cycle",
+    "Full campaign and restart using controller input only"
+  ],
+  "input_only_campaign": {
+    "frames_to_victory": 1484,
+    "emulated_frames": 1604,
+    "rooms": [
+      {
+        "room": 1,
+        "frame": 86,
+        "hp": 6
+      },
+      {
+        "room": 2,
+        "frame": 296,
+        "hp": 6
+      },
+      {
+        "room": 3,
+        "frame": 574,
+        "hp": 5
+      },
+      {
+        "room": 4,
+        "frame": 867,
+        "hp": 6
+      }
+    ],
+    "hp": 2,
+    "kills": 10
+  },
+  "physical_hardware_tested": false
+}
