@@ -16,6 +16,8 @@ Capturas e resultados de 23 de outubro de 2026. Os gráficos foram produzidos pe
 
 O [relatório JSON](report.json) identifica a ROM e os nove grupos de teste. O [registro da campanha](playthrough.json) preserva entradas de controle com quantidades de quadros.
 
+O [registro de CI](ci.json) aponta para a execução bem-sucedida no Ubuntu 24.04. O log remoto foi conferido e gerou o mesmo SHA-256 da construção no macOS. A ROM, o vídeo e o artigo exportado foram distribuídos na [release v0.1.0](https://github.com/AlanHJH/gba-assembly-ai/releases/tag/v0.1.0); os downloads públicos da ROM e do artigo foram conferidos contra os arquivos locais.
+
 ## Resultados observados
 
 - Cabeçalho de cartucho válido e regressão da identificação multiboot coberta.

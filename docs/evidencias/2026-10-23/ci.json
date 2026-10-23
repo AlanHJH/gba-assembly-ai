@@ -1,0 +1,8 @@
+{
+  "url": "https://github.com/AlanHJH/gba-assembly-ai/actions/runs/39986568714",
+  "head_sha": "ab5a52135655af7227f13ac29f5078212cd0907e",
+  "conclusion": "success",
+  "runner": "ubuntu-24.04",
+  "rom_sha256": "567a13b74c0e0bcf0d8a302558569ecc7e686567986070467ee6d2480f7a0216",
+  "same_rom_as_macos": true
+}

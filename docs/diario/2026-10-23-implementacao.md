@@ -68,7 +68,23 @@ O percurso usa 1.484 quadros até a vitória, incluindo a apresentação inicial
 
 A ROM validada tem 14.456 bytes e SHA-256 `567a13b74c0e0bcf0d8a302558569ecc7e686567986070467ee6d2480f7a0216`. Relatório, entradas e capturas estão em [evidências](../evidencias/2026-10-23/README.md).
 
-Foi executada uma construção limpa, seguida dos testes, revisão de links e empacotamento. O hash foi reproduzido na reconstrução. Depois da correção final de dano, os testes e a captura foram repetidos para a nova ROM. Também foi adicionada uma exportação do artigo com 22 links HTTPS públicos, independentes de caminhos locais. O resultado remoto e a release serão acrescentados depois de observados.
+Foi executada uma construção limpa, seguida dos testes, revisão de links e empacotamento. O hash foi reproduzido na reconstrução. Depois da correção final de dano, os testes e a captura foram repetidos para a nova ROM. Também foi adicionada uma exportação do artigo com 22 links HTTPS públicos, independentes de caminhos locais. O resultado remoto e a release foram registrados abaixo após a execução.
+
+## Resultado remoto e distribuição
+
+A primeira execução de CI foi substituída antes de concluir, depois da correção de dano excedente. O job passou a construir somente o núcleo necessário aos testes, usando `MGBA_BUILD_SDL=OFF`, dispensando dependências gráficas na máquina Linux.
+
+A [execução 39986568714](https://github.com/AlanHJH/gba-assembly-ai/actions/runs/39986568714), no commit `ab5a52135655af7227f13ac29f5078212cd0907e`, terminou com sucesso no Ubuntu 24.04. O log confirmou o mesmo SHA-256 da ROM local e os nove grupos de teste, além da checagem dos 20 documentos Markdown. O registro resumido está em [ci.json](../evidencias/2026-10-23/ci.json).
+
+A [release pública v0.1.0](https://github.com/AlanHJH/gba-assembly-ai/releases/tag/v0.1.0) foi criada nesse commit, com a ROM, seu arquivo SHA-256, o MP4 e o artigo exportado. Foram executados:
+
+```sh
+python3 tools/package.py
+gh release create v0.1.0 --repo AlanHJH/gba-assembly-ai --target ab5a52135655af7227f13ac29f5078212cd0907e --title 'Gateblade v0.1.0' --notes-file docs/releases/v0.1.0.md dist/gateblade-v0.1.0.gba dist/gateblade-v0.1.0.sha256 dist/gateblade-demo.mp4 dist/gateblade-artigo.md
+gh release view v0.1.0 --repo AlanHJH/gba-assembly-ai --json tagName,url,isDraft,isPrerelease,targetCommitish,assets
+```
+
+A consulta confirmou a release publicada e os quatro arquivos enviados. Downloads sem autenticação da ROM e do artigo foram comparados byte a byte com os artefatos locais. A imagem versionada do GIF usada pelo artigo também respondeu publicamente. Não houve publicação no blog.
 
 ## Material editorial e limites
 
