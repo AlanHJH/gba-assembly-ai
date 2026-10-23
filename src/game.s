@@ -448,7 +448,7 @@ enemy_contact:
     cmp r1, #0
     movlt r1, #0
     str r1, [r0]
-    bleq player_died
+    blle player_died             @ Includes overkill, e.g. 1 HP minus boss damage.
     bl sound_hurt
 9:  pop {r4-r7, lr}
     bx lr

@@ -8,7 +8,7 @@ Capturas e resultados de 23 de outubro de 2026. Os gráficos foram produzidos pe
 | --- | --- |
 | ROM | `gateblade.gba` |
 | Tamanho | 14.456 bytes |
-| SHA-256 | `34b957b7ff050f5ab07f6d9b7e9877b8b388ed337d83c29086580af5c2a4b1dc` |
+| SHA-256 | `567a13b74c0e0bcf0d8a302558569ecc7e686567986070467ee6d2480f7a0216` |
 | Estado próprio em `.bss` | 260 bytes; não é uma medida de todo o uso de memória do console |
 | Emulador | mGBA 0.10.5, núcleo libretro |
 | BIOS externa fornecida | Não |

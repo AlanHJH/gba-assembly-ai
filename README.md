@@ -32,7 +32,7 @@ make play
 
 O [guia de reprodução](docs/reproducao.md) explica dependências, versões, comandos e saídas. A ROM é `build/gateblade.gba`. `make emulator` constrói o mGBA localmente a partir de um arquivo oficial com hash conferido; não o instala globalmente.
 
-`make demo` regrava uma campanha com entradas de controle e gera MP4/GIF, usando FFmpeg. `make package` verifica e prepara ROM e SHA-256 em `dist/`.
+`make demo` regrava uma campanha com entradas de controle e gera MP4/GIF, usando FFmpeg. `make package` verifica e prepara ROM, SHA-256 e uma cópia do artigo com links públicos em `dist/`.
 
 ## Artigo e documentação
 

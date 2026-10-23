@@ -10,8 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Install build tools
-        run: sudo apt-get update && sudo apt-get install -y binutils-arm-none-eabi cmake libsdl2-dev pkg-config
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends binutils-arm-none-eabi
       - name: Build verified upstream mGBA
-        run: make emulator
+        run: MGBA_BUILD_SDL=OFF make emulator
       - name: Build ROM, execute integration scenarios and check documentation
         run: make verify

@@ -32,6 +32,7 @@ O frontend de teste em Python implementa a interface libretro. Usa o mapa de mem
 4. Uma tentativa com desvio de +24 em `0xC0` ainda acionou a análise heurística de referências de memória do mGBA; não resolveu o problema. O desvio para trás adotado foi então validado por execução e pela presença do contador de quadros em andamento.
 5. A identificação de versão do mGBA extraído herdou o Git do projeto pai. `SKIP_GIT` e um limite de busca de repositório impediram essa identificação incorreta; o executável passou a informar 0.10.5.
 6. A primeira estratégia do controlador automatizado andava para dentro do chefe e morreu. O controlador foi corrigido para atacar à distância e recuar durante a preparação e a investida. A campanha posterior terminou com dois corações.
+7. Na revisão final, a condição de derrota tratava vida exatamente zero, mas não dano que passasse abaixo de zero antes de ser limitado. Um herói com um coração atingido pelo chefe poderia ficar com zero sem morrer. A condição foi corrigida para menor ou igual a zero, e um cenário específico de dano excedente foi acrescentado ao teste de derrota.
 
 ## Fontes
 

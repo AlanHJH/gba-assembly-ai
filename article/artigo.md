@@ -115,6 +115,8 @@ Cada ataque aumenta `attack_id`. Cada adversário guarda o identificador do últ
 
 O ataque tem nove quadros ativos e intervalo de vinte quadros. Durante sua parte ativa, o herói não anda nem muda a direção do golpe. Segurar A repete o ataque quando o intervalo permite. Ao receber dano de contato, o herói ganha 75 quadros de proteção, para não perder todos os corações numa única sobreposição.
 
+A revisão também encontrou um caso de borda: se o herói tem um coração e o chefe causa dois, o resultado antes do limite é negativo. A condição de derrota precisa tratar vida menor ou igual a zero, não apenas igualdade. Isso foi corrigido e recebeu um cenário próprio no teste de derrota.
+
 ## 9. Ligar as mortes à saída da sala
 
 Ao carregar uma sala, o jogo inicializa os adversários e o contador de inimigos vivos. Quando um inimigo passa de vida positiva para zero, o contador diminui uma vez e o total de eliminações aumenta.

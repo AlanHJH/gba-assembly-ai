@@ -137,6 +137,12 @@ def death():
     emu.frames(1,START)
     assert emu.read('game_state') == 1 and emu.read('player_hp') == 6
     assert emu.read('room_index') == 0 and emu.read('total_kills') == 0
+    isolated()
+    actor(112,112,hp=16,kind=2,size=32)
+    emu.write('player_iframes',0)
+    emu.write('player_hp',1)
+    emu.frames(2)
+    assert emu.read('player_hp') == 0 and emu.read('game_state') == 3, 'Boss overkill must trigger defeat'
 
 
 def boss_cycle():

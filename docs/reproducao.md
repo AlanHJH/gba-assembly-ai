@@ -89,10 +89,10 @@ São gerados um registro de entradas, capturas PNG, um MP4 e um GIF. A captura s
 make package
 ```
 
-Depois de passar nos testes, a ROM e seu SHA-256 são copiados para `dist/`. O comando não publica nada por si só. A publicação de uma release usa esses artefatos, evitando reconstruir uma ROM diferente depois da validação.
+Depois de passar nos testes, a ROM e seu SHA-256 são copiados para `dist/`. Também é exportado `dist/gateblade-artigo.md`, com os links e a imagem apontando para a versão pública no GitHub, para que o texto não dependa da estrutura local de pastas ao ser copiado para um blog. O comando não publica nada por si só. A publicação de uma release usa esses artefatos, evitando reconstruir uma ROM diferente depois da validação.
 
 `make clean` remove os resultados do jogo e dos testes, preservando a origem baixada e a construção do emulador. Saídas em `build/` e `dist/` não são versionadas; as evidências selecionadas em `docs/evidencias/` são.
 
 ## Integração contínua
 
-O workflow `.github/workflows/check.yml` prepara ferramentas no Ubuntu 24.04, constrói o mGBA e executa `make verify`. O estado de cada execução pode ser consultado em [GitHub Actions](https://github.com/AlanHJH/gba-assembly-ai/actions). A existência do workflow, por si só, não comprova que uma execução remota passou; o diário registra o resultado observado.
+O workflow `.github/workflows/check.yml` prepara Binutils no Ubuntu 24.04, constrói o mGBA sem janela usando `MGBA_BUILD_SDL=OFF make emulator` e executa `make verify`. O job usa o núcleo libretro e dispensa as dependências de interface gráfica; a construção local padrão continua incluindo SDL para jogar. O estado de cada execução pode ser consultado em [GitHub Actions](https://github.com/AlanHJH/gba-assembly-ai/actions). A existência do workflow, por si só, não comprova que uma execução remota passou; o diário registra o resultado observado.

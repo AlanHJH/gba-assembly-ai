@@ -56,6 +56,7 @@ As primeiras codificações da demonstração foram executadas diretamente com F
 5. A identificação de versão do mGBA herdou o Git do repositório pai. A configuração foi corrigida; o executável passou a informar 0.10.5.
 6. A primeira estratégia automatizada de campanha morreu no chefe, após derrotar os nove inimigos comuns. A estratégia foi corrigida para manter distância e recuar nos estados de preparação e investida. O chefe manteve dezesseis pontos de vida e dano de dois corações.
 7. Foi tentada a inspeção da janela SDL por automação nativa. O executável sem bundle não foi reconhecido pela ferramenta de seleção de aplicativos. Não se afirma uma validação manual de teclado por essa interface. A campanha e as capturas foram verificadas pelo frontend libretro executando a ROM; os atalhos SDL foram conferidos no código do frontend.
+8. A revisão final identificou um caso de dano excedente do chefe: de um coração para zero, a transição de derrota não era chamada porque o valor anterior ao limite era negativo. A condição passou de igualdade para menor ou igual, e o cenário foi adicionado ao teste de derrota. A ROM e a demonstração foram reconstruídas após essa correção.
 
 Os detalhes técnicos, alternativas e fontes estão na decisão 0003. Pequenos ajustes de caminho do executável SDL, versão e contagem de quadros da demonstração foram agrupados nesta sessão.
 
@@ -65,9 +66,9 @@ Nove grupos de teste passaram, incluindo uma campanha sem escrita no estado do j
 
 O percurso usa 1.484 quadros até a vitória, incluindo a apresentação inicial. A demonstração inclui mais 120 quadros da tela final e seleciona um quadro de vídeo a cada seis quadros emulados. MP4 e GIF foram codificados sem áudio.
 
-A ROM validada tem 14.456 bytes e SHA-256 `34b957b7ff050f5ab07f6d9b7e9877b8b388ed337d83c29086580af5c2a4b1dc`. Relatório, entradas e capturas estão em [evidências](../evidencias/2026-10-23/README.md).
+A ROM validada tem 14.456 bytes e SHA-256 `567a13b74c0e0bcf0d8a302558569ecc7e686567986070467ee6d2480f7a0216`. Relatório, entradas e capturas estão em [evidências](../evidencias/2026-10-23/README.md).
 
-Uma revisão final de construção limpa, links, distribuição e execução remota acompanha o envio ao GitHub. O resultado remoto e a release serão acrescentados depois de observados.
+Foi executada uma construção limpa, seguida dos testes, revisão de links e empacotamento. O hash foi reproduzido na reconstrução. Depois da correção final de dano, os testes e a captura foram repetidos para a nova ROM. Também foi adicionada uma exportação do artigo com 22 links HTTPS públicos, independentes de caminhos locais. O resultado remoto e a release serão acrescentados depois de observados.
 
 ## Material editorial e limites
 
