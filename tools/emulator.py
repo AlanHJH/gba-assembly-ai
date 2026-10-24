@@ -172,5 +172,5 @@ if __name__ == '__main__':
     emu.frames(1, 8)
     emu.frames(8)
     print('Started:', {key: emu.read(key) for key in ('game_state', 'base_hp', 'coins')})
-    emu.screenshot(ROOT / 'build/test-results/room.png')
+    emu.screenshot(ROOT / 'build/test-results/map.png')
     emu.close()

@@ -53,6 +53,8 @@ Também foram usados `arm-none-eabi-nm`, `git diff`, leitura de fontes e inspeç
 4. **Erro de indentação em limpeza do gerador.** Remover uma variável não usada deixou o `for offset` com nível incorreto. `make demo` parou em `IndentationError`. A indentação foi corrigida e a geração completa foi repetida.
 5. **Verificação de documentação antes de terminar os arquivos.** A primeira execução de `make verify` passou na ROM, mas apontou os links do diário e do índice de evidências ainda não criados. Os documentos foram concluídos e a checagem foi repetida antes da distribuição.
 
+6. **Revisão final da paleta de disparo.** O efeito de FROST referenciava uma entrada de paleta preenchida com preto. Foi trocada pela cor azul já definida no banco de efeitos. A correção é visual; ROM, demonstração e testes foram reconstruídos para identificar o artefato correto.
+
 Essas tentativas fazem parte da sessão e não foram reescritas como se todas as premissas iniciais estivessem corretas.
 
 ## Validação observada
@@ -73,4 +75,4 @@ Revisar o tutorial e a economia com jogadores, testar em hardware e fazer revis�
 
 ## Construção limpa e pacote final local
 
-`make clean` foi seguido de nova geração dos recursos e montagem. A campanha e a reprodução integral dos botões passaram. Depois da inclusão dos JSONs no índice de evidências, `make package` passou nos quinze grupos e na verificação dos 25 documentos Markdown. ROM: 22.520 bytes, SHA-256 `39a85dabf16ab6242b33440a13292bfa6bac4fb441bf109bc7ae8f86c5f6bd36`. O pacote copiou essa mesma ROM para `dist/gateblade-v0.2.0.gba` e exportou `dist/gateblade-artigo.md` com links da tag v0.2.0.
+`make clean` foi seguido de nova geração dos recursos e montagem. A campanha e a reprodução integral dos botões passaram. Depois da inclusão dos JSONs no índice de evidências, `make package` passou nos quinze grupos e na verificação dos 25 documentos Markdown. ROM: 22.520 bytes, SHA-256 `96e8e02ae5e066ed0765a75814b7d418a0ea0dbbf9a2527318679e3141e3a3aa`. O pacote copiou essa mesma ROM para `dist/gateblade-v0.2.0.gba` e exportou `dist/gateblade-artigo.md` com links da tag v0.2.0.

@@ -254,7 +254,7 @@ def generate():
             if tower_type==2: rect(im,5,2,8,6,2);rect(im,7,3,6,3,6)
             if upgraded: rect(im,5,10,6,2,7)
             objects.extend(tiles(im))
-    for color in (6,8,7):
+    for color in (6,4,7):
         im=canvas(8);rect(im,2,2,4,4,color);objects.extend(tiles(im))
     objects.extend(bytes(5*32)) # Reserve through tile 175.
     im=canvas(16)
@@ -291,7 +291,7 @@ def generate():
         seasonal.append(palette(colors))
     (OUT/'stage.pal').write_bytes(b''.join(seasonal))
     generate_maps()
-    print(f'Original assets: 128 BG tiles, {len(objects)//32} OBJ tiles, two palettes, ten themes.')
+    print(f'Original assets: 128 BG tiles, {len(objects)//32} OBJ tiles, two palette files, ten stage palettes.')
 
 
 if __name__ == '__main__':

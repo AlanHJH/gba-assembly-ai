@@ -1,6 +1,6 @@
 {
   "emulator": "mGBA 0.10.5 / libretro, verified upstream archive",
-  "rom_sha256": "39a85dabf16ab6242b33440a13292bfa6bac4fb441bf109bc7ae8f86c5f6bd36",
+  "rom_sha256": "96e8e02ae5e066ed0765a75814b7d418a0ea0dbbf9a2527318679e3141e3a3aa",
   "rom_bytes": 22520,
   "checks": [
     "Cartridge header and non-multiboot entry",

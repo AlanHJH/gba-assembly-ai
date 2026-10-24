@@ -8,7 +8,7 @@ Resultados de 24 de outubro de 2026. A ROM foi executada no núcleo libretro do 
 | --- | --- |
 | ROM | `gateblade-v0.2.0.gba` |
 | Tamanho | 22.520 bytes |
-| SHA-256 | `39a85dabf16ab6242b33440a13292bfa6bac4fb441bf109bc7ae8f86c5f6bd36` |
+| SHA-256 | `96e8e02ae5e066ed0765a75814b7d418a0ea0dbbf9a2527318679e3141e3a3aa` |
 | Execução | mGBA 0.10.5 / libretro |
 | Hardware físico | Não testado |
 
