@@ -41,6 +41,6 @@ A tag e a release [v0.1.0](https://github.com/AlanHJH/gba-assembly-ai/releases/t
 - Testar em GBA físico, registrando equipamento e hash.
 - Definir licença de reutilização.
 - Avaliar salvamento, novas animações, áudio de torres e mais mapas depois do feedback.
-- Revisar editorialmente o artigo e integrá-lo ao blog em etapa separada.
+- Recolher feedback do tutorial publicado e revisar sua apresentação e sequência.
 
-A campanha é um protótipo funcional; não foi medida a dificuldade para jogadores humanos. O artigo não foi publicado automaticamente no site pessoal.
+A campanha é um protótipo funcional; não foi medida a dificuldade para jogadores humanos. O tutorial foi publicado no site pessoal após autorização explícita do usuário em 24 de outubro de 2026.

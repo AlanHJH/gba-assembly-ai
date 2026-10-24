@@ -20,3 +20,9 @@ make verify
 ```
 
 O preenchimento completo da tela no início/reinício leva mais de um frame. O teste de uma atualização por frame refere-se ao laço normal, depois dessa preparação.
+
+A [execução no Ubuntu 24.04](https://github.com/AlanHJH/gba-assembly-ai/actions/runs/40072846180) passou com as quatro ROMs, a campanha completa e a reconstrução do artigo. O [registro de CI](ci.json) identifica o commit e o SHA-256 da ROM didática, coincidente com o local.
+
+## Publicação no blog
+
+O [artigo em produção](https://alanjahnel.dev/game-boy-advance-assembly-do-zero) foi conferido por HTTP e no navegador. Os 17 blocos de código são idênticos aos do tutorial testado; duas tabelas renderizaram e a imagem carregou. A home, sitemap, SEO, previews e seis identificações de crawler passaram no smoke de produção. O [registro JSON](publicacao.json) identifica o commit do site, CI e download público do kit; a [captura](artigo-producao.png) mostra a página publicada.

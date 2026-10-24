@@ -1,0 +1,18 @@
+{
+  "article_url": "https://alanjahnel.dev/game-boy-advance-assembly-do-zero",
+  "http_status": 200,
+  "verified_at": "2026-10-24T04:13:22-03:00",
+  "site_commit": "54e4adf1af3b0d448b6776d56d40f70e2b696587",
+  "production_deployment_id": 7295467411,
+  "site_ci_url": "https://github.com/AlanHJH/personal-website/actions/runs/40073007107",
+  "code_blocks": 17,
+  "code_matches_tested_tutorial": true,
+  "tables": 2,
+  "image_loaded_in_browser": true,
+  "browser_console_errors": 0,
+  "production_smoke_passed": true,
+  "published_articles": 3,
+  "release_url": "https://github.com/AlanHJH/gba-assembly-ai/releases/tag/v0.3.0",
+  "manual_kit_sha256": "376747cef9a78538b61c055f975235af0fcf4ee493b16c2830ccf9c9e17da5e9",
+  "manual_kit_public_download_matches": true
+}
