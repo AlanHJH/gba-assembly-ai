@@ -30,18 +30,13 @@ def stage_data():
     for index,stage in enumerate(source):
         route=expand(stage['route'])
         assert SPAWN not in route and EXIT not in route
-        occupied=set(route)
-        candidates={(x+dx,y+dy) for x,y in route for dx,dy in ((1,0),(-1,0),(0,1),(0,-1))
-                    if 0<=x+dx<COLS and 0<=y+dy<ROWS}
-        candidates-=occupied|{SPAWN,EXIT,(0,0),(13,0),(0,6),(13,6)}
-        pads=[]
-        for slot in range(8):
-            target=route[(slot+1)*(len(route)-1)//9]
-            choice=min(candidates,key=lambda p:(
-                sum(max(0,2-abs(p[0]-q[0])-abs(p[1]-q[1])) for q in pads)*20
-                + abs(p[0]-target[0])+abs(p[1]-target[1]), p[1],p[0]))
-            pads.append(choice)
-            candidates.remove(choice)
+        # Construction pads are handwritten data, just like the route.
+        pads=[tuple(point) for point in stage['pads']]
+        assert len(pads)==8 and len(set(pads))==8
+        for x,y in pads:
+            assert 0<=x<COLS and 0<=y<ROWS
+            assert (x,y) not in set(route)|{SPAWN,EXIT,(0,0),(13,0),(0,6),(13,6)}
+            assert any(abs(x-rx)+abs(y-ry)==1 for rx,ry in route)
         grid=[0]*(COLS*ROWS)
         for x,y in route: grid[y*COLS+x]=1
         for x,y in ((0,0),(13,0),(0,6),(13,6)): grid[y*COLS+x]=2

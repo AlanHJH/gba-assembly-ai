@@ -2,7 +2,7 @@
 
 ## Do dado autoral ao cartucho
 
-`assets/stages.json` descreve nomes, temas, ondas e vértices das dez rotas. `tools/maps.py` expande cada segmento em células adjacentes, sem diagonais ou cruzamentos. Seleciona oito pontos vizinhos à rota e verifica por busca em largura que todos podem ser atendidos pelo herói mesmo com todas as torres construídas. Também verifica acesso à saída.
+`assets/stages.json` descreve nomes, temas, ondas, vértices das dez rotas e oito pontos de construção escritos explicitamente. `tools/maps.py` expande cada segmento em células adjacentes, sem diagonais ou cruzamentos. Valida os pontos fora da estrada e verifica por busca em largura que todos podem ser atendidos mesmo com todas as torres construídas. Também verifica acesso à saída. A seleção automática de pontos foi removida para facilitar edição manual; as posições e a ROM continuam iguais.
 
 A construção gera mapas de 98 bytes, rotas e pontos com pares de coordenadas de 32 bits, uma tabela de fases e JSON para inspeção dos testes. Os arquivos binários entram na ROM por `.incbin`. Nenhum interpretador JSON ou Python executa no GBA.
 

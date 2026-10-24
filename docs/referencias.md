@@ -38,3 +38,7 @@ As fontes do mGBA são dependência de desenvolvimento e preservam a licença pr
 Foram consultadas novamente as referências [Tonc: backgrounds](https://gbadev.net/tonc/regbg.html), [Tonc: controles](https://gbadev.net/tonc/keys.html) e [GNU assembler: opções ARM](https://sourceware.org/binutils/docs/as/ARM-Options.html) para a composição por tiles, leitura de teclas e seleção ARM7TDMI. As regras de ondas, economia, prioridades e mapas são decisões próprias, descritas na [decisão 0004](decisoes/0004-campanha-tower-defense.md); não são regras atribuídas a essas fontes.
 
 Nenhuma arte, mapa ou trecho de jogo comercial foi incorporado. A comparação com movimentação clássica por tiles orienta o controle; não representa reprodução de recursos de Pokémon.
+
+## Tutorial manual — 24 de outubro de 2026
+
+[Tonc: bitmap modes](https://gbadev.net/tonc/bitmaps.html) foi consultado para o formato de pixels do Mode 3. [Tonc: keypad](https://gbadev.net/tonc/keys.html), [GNU assembler: ARM](https://sourceware.org/binutils/docs/as/ARM-Options.html) e [downloads oficiais do mGBA](https://mgba.io/downloads.html) foram conferidos para controles, arquitetura e o caminho de usar um emulador pronto. O artigo contém assembly e algoritmos próprios, e cada bloco é comparado ao arquivo executado.

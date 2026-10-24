@@ -1,0 +1,39 @@
+{
+  "emulator": "mGBA 0.10.5 / libretro",
+  "steps": [
+    {
+      "step": 1,
+      "rom_bytes": 1100,
+      "rom_sha256": "91e94366122c780e80b5c6c9d54e2d1f3a9c6ff21e7591d7376983879ddec386",
+      "one_update_per_frame": true,
+      "input_only_defense": null
+    },
+    {
+      "step": 2,
+      "rom_bytes": 1456,
+      "rom_sha256": "f03c7de0c8132049118702438a6076b71e786b86daa9c589f6416836156c4755",
+      "one_update_per_frame": true,
+      "input_only_defense": null
+    },
+    {
+      "step": 3,
+      "rom_bytes": 1716,
+      "rom_sha256": "d40da03a9401ee951dd9bad5c19ecc93040f0080cb21cd6b63b8be558832164c",
+      "one_update_per_frame": true,
+      "input_only_defense": null
+    },
+    {
+      "step": 4,
+      "rom_bytes": 2112,
+      "rom_sha256": "bd300b19d242da7b3952d03d90beb7ad53fccb1a4396329679056364e6480075",
+      "one_update_per_frame": true,
+      "input_only_defense": {
+        "kills": 4,
+        "coins": 20,
+        "base_hp": 3,
+        "state_writes": 0
+      }
+    }
+  ],
+  "physical_hardware_tested": false
+}

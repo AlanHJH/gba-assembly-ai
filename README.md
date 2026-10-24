@@ -4,9 +4,24 @@ Um tower defense para **Game Boy Advance**, com herói controlável, dez mapas o
 
 Caminhe pelo mapa, construa torres nos pontos dourados **ao lado da rota**, defenda a base azul e ganhe moedas derrotando Brumins. Novas torres são liberadas ao longo da campanha. Quando todas as ondas terminarem, caminhe até o portal para seguir à próxima fase.
 
-**Versão 0.2.0:** campanha executada no mGBA 0.10.5; testes de hardware físico continuam pendentes. A [v0.1.0](https://github.com/AlanHJH/gba-assembly-ai/releases/tag/v0.1.0), de combate por salas, permanece disponível.
+**Versão 0.3.0:** entrada didática em quatro etapas e campanha preservada, executada no mGBA 0.10.5; testes de hardware físico continuam pendentes. A [v0.1.0](https://github.com/AlanHJH/gba-assembly-ai/releases/tag/v0.1.0), de combate por salas, permanece disponível.
 
 ![Trechos da campanha real, com cortes e sem áudio](docs/evidencias/2026-10-24/gateblade-demo.gif)
+
+## Começar do zero
+
+A entrada recomendada é o [tutorial manual](article/artigo.md). Ele apresenta todo o código para criar um jogo menor em três arquivos: assembly, linker e cabeçalho. São quatro etapas executáveis, sem assets ou gerador de mapas:
+
+```sh
+make learn STEP=1
+make learn STEP=2
+make learn STEP=3
+make learn
+```
+
+Abra `build/learn/step-1.gba` até `step-4.gba` no mGBA. Para construir, bastam Binutils ARM, Python e Make; uma instalação pronta do emulador é suficiente para jogar. O [guia didático](learn/README.md) detalha controles e resultados esperados. O tutorial também mostra como montar os mesmos três arquivos em uma pasta vazia, sem Make.
+
+A etapa final tem um mapa, uma torre, uma onda e vitória/derrota. Depois disso, estude a campanha de dez mapas abaixo. `make verify` testa os dois caminhos e exige que os snippets do artigo produzam a mesma ROM do exemplo.
 
 ## Jogar
 
@@ -42,7 +57,10 @@ O [guia de reprodução](docs/reproducao.md) detalha ferramentas, versões e sa�
 
 | Documento | Conteúdo |
 | --- | --- |
-| [Artigo atual](article/artigo.md) | Passo a passo para revisão editorial e publicação |
+| [Tutorial manual](article/artigo.md) | Código completo comentado, em quatro etapas |
+| [Guia didático](learn/README.md) | Primeiro jogo, dependências mínimas e controles |
+| [Evidências do tutorial](docs/evidencias/2026-10-24-didatico/README.md) | Quatro ROMs e reconstrução pelos snippets |
+| [Artigo 0.2.0](article/artigo-v0.2.0.md) | Relato da campanha antes da entrada didática |
 | [Guia do jogo](docs/como-jogar.md) | Controles, tutorial, dez mapas e regras completas |
 | [Arquitetura da defesa](docs/arquitetura-td.md) | Estruturas, algoritmos e valores do assembly |
 | [Reprodução](docs/reproducao.md) | Construção, testes e demonstração |

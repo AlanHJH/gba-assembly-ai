@@ -17,6 +17,6 @@ O script escreve gráficos 4bpp e paletas em `build/assets/`; o assembly inclui 
 | 171–175 | Reservados |
 | 176–179 | Cursor de célula adjacente |
 
-`assets/stages.json` é a fonte dos dez mapas: nome, tema, ondas e vértices da rota. [tools/maps.py](../tools/maps.py) gera e valida células adjacentes, pontos fora da rota e acessibilidade antes de criar os dados usados pelo assembly. Cinco temas de paleta acompanham dez geometrias distintas. `build/assets/maps.json` permite inspecionar os dados gerados.
+`assets/stages.json` é a fonte dos dez mapas: nome, tema, ondas, vértices da rota e oito pontos de construção explícitos. [tools/maps.py](../tools/maps.py) gera e valida células adjacentes, pontos fora da rota e acessibilidade antes de criar os dados usados pelo assembly. Cinco temas de paleta acompanham dez geometrias distintas. `build/assets/maps.json` permite inspecionar os dados gerados.
 
 O cabeçalho de cartucho é tratado por `tools/rom.py`, separadamente dos recursos. A licença de reutilização do projeto continua pendente de definição pelo mantenedor.

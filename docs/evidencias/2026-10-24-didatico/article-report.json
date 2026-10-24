@@ -1,0 +1,13 @@
+{
+  "source_files": [
+    "main.s",
+    "gba.ld",
+    "rom.py"
+  ],
+  "code_snippets": 12,
+  "rom_bytes": 2112,
+  "rom_sha256": "bd300b19d242da7b3952d03d90beb7ad53fccb1a4396329679056364e6480075",
+  "matches_learning_rom": true,
+  "blank_directory_rebuild": true,
+  "game_code_language": "ARM assembly"
+}

@@ -2,7 +2,16 @@
 
 Atualizado em 24 de outubro de 2026.
 
-## Estado atual: Gateblade TD 0.2.0
+## Entrada didática 0.3.0
+
+- [x] Quatro etapas compiláveis em um arquivo assembly, sem assets.
+- [x] Um mapa, uma torre e uma partida completa por controle.
+- [x] Artigo com todos os snippets, linker e ferramenta de cabeçalho.
+- [x] Reconstrução em pasta vazia com ROM idêntica.
+- [x] Pontos de construção explícitos na campanha, removendo a heurística sem alterar a ROM.
+- [x] Relatos anteriores preservados.
+
+## Campanha preservada: Gateblade TD 0.2.0
 
 - [x] Projeto independente do site, público no GitHub.
 - [x] Startup e regras próprias em assembly ARM7TDMI.

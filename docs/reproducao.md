@@ -1,5 +1,11 @@
 # Construção, testes e demonstração
 
+## Primeiro contato, sem infraestrutura de testes
+
+Para seguir o tutorial, use `make learn STEP=1`, `STEP=2`, `STEP=3` e `make learn` na raiz. São necessários apenas Binutils ARM, Python e Make; abra a ROM gerada em uma instalação pronta do mGBA. Não é necessário gerar assets ou construir o emulador. O [guia didático](../learn/README.md) e o [artigo](../article/artigo.md) também ensinam a construir em uma pasta vazia com apenas três arquivos.
+
+Os passos abaixo descrevem a campanha completa e a infraestrutura opcional de testes. `make verify` inclui agora as quatro ROMs e a reconstrução do artigo. Os snippets são atualizados com `python3 tools/article_snippets.py` e conferidos com `make snippets`.
+
 ## Ambiente validado
 
 O desenvolvimento local usou macOS 15.6 em arm64, GNU Binutils para `arm-none-eabi` 2.44, Python 3.13.3, GNU Make 3.81, CMake 4.0.1 e SDL2 2.32.4. O mGBA 0.10.5 foi construído de uma distribuição oficial cujo SHA-256 é conferido pelo script.

@@ -59,7 +59,7 @@ def png(filename, raw, width, height, pitch, pixel_format=2):
 
 
 class Emulator:
-    def __init__(self):
+    def __init__(self, target="build/gateblade"):
         extension = 'dylib' if sys.platform == 'darwin' else 'so'
         library = ROOT / f'build/emulator/mgba_libretro.{extension}'
         if not library.exists():
@@ -76,7 +76,7 @@ class Emulator:
         self.state_writes = 0
         self.directory = str(ROOT / 'build/test-results').encode()
         Path(self.directory.decode()).mkdir(parents=True, exist_ok=True)
-        output = subprocess.check_output(['arm-none-eabi-nm', '-n', 'build/gateblade.elf'], cwd=ROOT, text=True)
+        output = subprocess.check_output(['arm-none-eabi-nm', '-n', f'{target}.elf'], cwd=ROOT, text=True)
         self.symbols = {parts[2]: int(parts[0], 16) for line in output.splitlines() if len(parts := line.split()) == 3}
 
         def environment(command, pointer):
@@ -120,7 +120,7 @@ class Emulator:
         self.lib.retro_load_game.argtypes = [C.POINTER(GameInfo)]
         self.lib.retro_load_game.restype = C.c_bool
         self.lib.retro_init()
-        rom = (ROOT / 'build/gateblade.gba').read_bytes()
+        rom = (ROOT / f'{target}.gba').read_bytes()
         self.rom_buffer = C.create_string_buffer(rom)
         self.info = GameInfo(b'gateblade.gba', C.cast(self.rom_buffer, C.c_void_p), len(rom), None)
         if not self.lib.retro_load_game(C.byref(self.info)):
