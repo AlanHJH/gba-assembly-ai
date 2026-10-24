@@ -70,26 +70,55 @@ obj_tiles_end:
 bg_palette: .incbin "build/assets/bg.pal"
 obj_palette: .incbin "build/assets/obj.pal"
 
+stage_palettes: .incbin "build/assets/stage.pal"
+.include "build/assets/stages.inc"
+
 .section .bss
 .balign 4
-.global game_state, room_index, player_x, player_y, player_hp, enemies
-.global attack_timer, attack_id, attack_cooldown, player_iframes, facing
-.global enemies_alive, frame_tick, total_kills, keys, pressed
-game_state:       .space 4
-room_index:       .space 4
-player_x:         .space 4
-player_y:         .space 4
-player_hp:        .space 4
-facing:           .space 4
-player_iframes:   .space 4
-attack_timer:     .space 4
-attack_cooldown:  .space 4
-attack_id:        .space 4
-enemies_alive:    .space 4
-frame_tick:       .space 4
-keys:             .space 4
-pressed:          .space 4
-total_kills:      .space 4
-attack_x:         .space 4
-attack_y:         .space 4
-enemies:          .space ENEMY_SIZE * MAX_ENEMIES
+.global game_state, stage_index, wave_index, wave_active, stage_clear, base_hp, coins, selected_type, unlocked_types, stage_invested, player_x, player_y, hero_col, hero_row, target_col, target_row, move_left, facing, attack_timer, attack_cooldown, attack_id, attack_x, attack_y, enemies_alive, frame_tick, keys, pressed, total_kills, total_leaks, waves_cleared, towers_built, spawn_remaining, spawn_timer, spawn_index, stage_waves, base_enemy_hp, spawn_interval, route_ptr, route_count, map_ptr, pads_ptr, stage_name, notice_timer, notice_code, enemies, towers
+game_state: .space 4
+stage_index: .space 4
+wave_index: .space 4
+wave_active: .space 4
+stage_clear: .space 4
+base_hp: .space 4
+coins: .space 4
+selected_type: .space 4
+unlocked_types: .space 4
+stage_invested: .space 4
+player_x: .space 4
+player_y: .space 4
+hero_col: .space 4
+hero_row: .space 4
+target_col: .space 4
+target_row: .space 4
+move_left: .space 4
+facing: .space 4
+attack_timer: .space 4
+attack_cooldown: .space 4
+attack_id: .space 4
+attack_x: .space 4
+attack_y: .space 4
+enemies_alive: .space 4
+frame_tick: .space 4
+keys: .space 4
+pressed: .space 4
+total_kills: .space 4
+total_leaks: .space 4
+waves_cleared: .space 4
+towers_built: .space 4
+spawn_remaining: .space 4
+spawn_timer: .space 4
+spawn_index: .space 4
+stage_waves: .space 4
+base_enemy_hp: .space 4
+spawn_interval: .space 4
+route_ptr: .space 4
+route_count: .space 4
+map_ptr: .space 4
+pads_ptr: .space 4
+stage_name: .space 4
+notice_timer: .space 4
+notice_code: .space 4
+enemies: .space ENEMY_SIZE * MAX_ENEMIES
+towers: .space TOWER_SIZE * MAX_TOWERS

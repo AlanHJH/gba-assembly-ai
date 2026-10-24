@@ -1,157 +1,116 @@
-# Criando um jogo de Game Boy Advance em assembly com ajuda de IA
+# Criando um tower defense para Game Boy Advance em assembly com apoio de IA
 
-A ideia começou com uma regra simples: um herói entra em uma sala com uma espada, derrota os inimigos e libera a saída. Na próxima sala, o desafio se repete, até uma luta contra um chefe mais difícil.
+A proposta começou com um herói, uma espada e salas cheias de inimigos. Depois mudou: eu queria a movimentação por células dos RPGs clássicos, combinada com um tower defense. O resultado desta etapa é **Gateblade TD**: dez mapas, moedas por eliminações, três tipos de torre e uma campanha que termina ao atravessar o último portal.
 
-Quis transformar essa ideia em um jogo de Game Boy Advance e documentar o desenvolvimento com apoio de IA. O resultado desta primeira versão é **Gateblade**: quatro salas, combate direcional, inimigos que perseguem o jogador, um chefe com investida, derrota, reinício e vitória.
+O jogo executa em uma ROM de Game Boy Advance. Seu startup, as regras e a renderização foram escritos em assembly para ARM7TDMI. A IA apoiou a implementação, a criação das ferramentas e a documentação; os testes executaram a ROM no mGBA. Python prepara recursos e controla o emulador no computador, sem fazer parte do programa executado pelo console.
 
-O código executado pelo console é assembly ARM, incluindo a inicialização. As ferramentas de preparação e teste usam Python, Make e o emulador mGBA. Essa separação é importante para entender o que significa assembly puro neste projeto.
+Este texto acompanha a versão **0.2.0**. O projeto público está no [GitHub](https://github.com/AlanHJH/gba-assembly-ai), e a [release](https://github.com/AlanHJH/gba-assembly-ai/releases/tag/v0.2.0) contém ROM, checksum, demonstração e uma cópia deste artigo. A primeira versão, de combate em quatro salas, continua preservada na [v0.1.0](https://github.com/AlanHJH/gba-assembly-ai/releases/tag/v0.1.0) e no [artigo anterior](artigo-v0.1.0.md).
 
-O [repositório está público no GitHub](https://github.com/AlanHJH/gba-assembly-ai). A [ROM pode ser obtida nas releases](https://github.com/AlanHJH/gba-assembly-ai/releases), e o [guia de reprodução](../docs/reproducao.md) mantém os comandos e requisitos usados na construção.
+![Trechos da campanha executada no mGBA; há cortes e não há áudio](../docs/evidencias/2026-10-24/gateblade-demo.gif)
 
-## 1. Transformar a ideia em regras pequenas
+## 1. Transformar a ideia em regras observáveis
 
-Antes de programar, o jogo precisava de um recorte que pudesse ser concluído. A proposta do herói, da espada e das saídas bloqueadas veio do pedido inicial. Nome, visão de cima, quatro salas e valores de vida foram decisões de implementação.
+O pedido definiu dez fases com mapas diferentes, uma primeira fase simples para ensinar o jogo, moedas por inimigos derrotados e torres com funções distintas. Uma decisão foi confirmada antes de implementar: as torres ficariam **ao lado da estrada, sem bloquear a passagem dos inimigos**.
 
-O herói começa com seis corações. A espada causa um ponto de dano e atinge uma área à frente do personagem. Os slimes da primeira sala precisam de dois golpes; os inimigos das salas seguintes precisam de três. O chefe tem dezesseis pontos de vida e causa o dobro do dano de contato de um inimigo comum.
+A campanha adotou oito pontos de construção por mapa. O jogador anda até um deles, vira para a célula adjacente e aperta A. As torres atacam sozinhas quando os inimigos entram no alcance. R inicia uma onda, e Start pausa. O herói conserva a espada em B para ajudar na defesa.
 
-As três primeiras salas têm dois, três e quatro adversários. A quarta tem o Guardião. Ao limpar uma sala, a porta ao norte abre, mas é necessário caminhar até ela para continuar. Entrar na sala seguinte recupera um coração, respeitando o limite inicial.
+Cada mapa tem uma base com seis pontos de vida. Brumins, criaturas fictícias criadas para o projeto, seguem uma rota fixa até ela. Um inimigo comum que chega retira um ponto; o Guardião da Névoa, presente na última onda, retira três. A vida da base chegando a zero encerra a partida.
 
-Esse recorte deixou inventário, equipamentos, mapas grandes e geração procedural para depois. A primeira versão precisava demonstrar uma partida completa, da tela inicial à vitória.
+Quando todas as ondas são resolvidas e a base continua de pé, o portal abre. O herói precisa caminhar até a saída para trocar de mapa. Essa travessia mantém a movimentação como parte da experiência, mesmo entre as defesas.
 
-## 2. Escolher o alvo certo de assembly
+As regras completas estão no [guia do jogo](../docs/como-jogar.md). Os valores de custos, vida e recarga são escolhas desta implementação, sujeitas a testes com jogadores; não foram fornecidos como parâmetros exatos no pedido inicial.
 
-O alvo é o **Game Boy Advance**, com processador ARM7TDMI. Não basta pedir à IA “assembly ARM”: as instruções precisam ser compatíveis com a arquitetura dessa CPU. A documentação da [Arm relaciona ARM7TDMI a Armv4T](https://developer.arm.com/community/arm-community-blogs/b/architectures-and-processors-blog/posts/arm-fundamentals-introduction-to-understanding-arm-processors), e o [Tonc apresenta o hardware do GBA](https://gbadev.net/tonc/hardware.html).
+## 2. Escolher o alvo e separar as ferramentas
 
-Nesta versão, o programa usa instruções ARM. O assembler recebe explicitamente `-mcpu=arm7tdmi`, para não aceitar silenciosamente instruções de processadores mais recentes. A opção é documentada pelo [GNU assembler](https://sourceware.org/binutils/docs/as/ARM-Options.html).
+O alvo escolhido foi o **Game Boy Advance**. A comparação com movimentação clássica por tiles serviu de referência de controle. Os gráficos, inimigos e mapas são originais; nenhum recurso de Pokémon foi incorporado.
 
-Assembly puro, aqui, significa que o startup, as regras, a leitura dos controles, a renderização e os efeitos sonoros próprios estão em assembly. Não usamos um jogo escrito em C com algumas rotinas assembly. Também não usamos engine ou runtime C dentro da ROM.
+A construção usa GNU Binutils para `arm-none-eabi`: assembler, linker e conversor para binário. O assembler recebe `-mcpu=arm7tdmi`. O projeto não depende de engine, libgba, GCC ou runtime C para montar a ROM.
 
-Isso não impede ferramentas de outras linguagens no computador. O script que empacota pixels ou fornece botões a um emulador não é executado pelo GBA.
+No computador, Python gera os recursos, preenche o cabeçalho e executa os testes. O mGBA fornece a emulação. O código C do emulador é uma ferramenta externa, não código do jogo dentro do cartucho. Essa separação permite usar ferramentas práticas sem abandonar o requisito de assembly para o executável.
 
-## 3. Preparar a construção
+A configuração e os limites foram registrados em [decisões técnicas](../docs/decisoes/0003-ferramentas-e-validacao.md) e na [decisão da campanha](../docs/decisoes/0004-campanha-tower-defense.md).
 
-O caminho escolhido usa três utilitários de GNU Binutils: `as`, `ld` e `objcopy`. No macOS de desenvolvimento, foi instalado o pacote `arm-none-eabi-binutils` pelo Homebrew; a versão efetivamente utilizada foi 2.44.
+## 3. Construir uma ROM mínima que realmente inicia
 
-O Make organiza esta sequência:
+O startup coloca a pilha na memória interna, limpa o estado em EWRAM, inicializa o vídeo e mostra a tela inicial. O linker organiza código e dados constantes na região do cartucho. Depois, `objcopy` transforma o ELF em binário e uma ferramenta preenche o cabeçalho.
 
-```text
-pixels e letras definidos em Python
-            ↓
-tiles e paletas binários
-            ↓
-assembly → arquivo objeto → ELF → binário → cabeçalho → ROM .gba
-```
+Um problema da primeira versão mostrou por que montar o assembly não basta: a ROM pequena foi identificada como multiboot pelo emulador, carregada em EWRAM e apagada pela própria limpeza de estado. A correção da entrada de cartucho em `0xC0` foi preservada na evolução para tower defense e possui teste de regressão.
 
-Na raiz do projeto, `make` executa o processo inteiro. As etapas principais são:
+A validação segue etapas distintas: montar, linkeditar, conferir cabeçalho, executar e observar o estado da partida. O [diário histórico](../docs/diario/2026-10-23-implementacao.md) preserva a investigação, incluindo as tentativas que falharam.
 
-```sh
-arm-none-eabi-as -mcpu=arm7tdmi -g -o build/gateblade.o src/main.s
-arm-none-eabi-ld -T src/gba.ld -Map=build/gateblade.map -o build/gateblade.elf build/gateblade.o
-arm-none-eabi-objcopy -O binary build/gateblade.elf build/gateblade.gba
-python3 tools/rom.py build/gateblade.gba
-```
+## 4. Descrever dez mapas como dados
 
-O [script de linkedição](../src/gba.ld) posiciona código e recursos na região de ROM e o estado mutável em EWRAM. Esse é o papel do linker script: definir a disposição das seções na memória, como explica a [documentação do GNU ld](https://sourceware.org/binutils/docs/ld/Scripts.html). O [objcopy](https://sourceware.org/binutils/docs/binutils/objcopy.html) produz o binário sem a estrutura de depuração do ELF.
+Em vez de codificar cada fase diretamente em instruções, `assets/stages.json` descreve nomes, temas, quantidade de ondas e vértices das rotas. Um exemplo da primeira fase é a estrada reta entre as células `(0,3)` e `(13,3)`.
 
-Por fim, `tools/rom.py` preenche os campos do cabeçalho, os bytes fixos de identificação e o checksum. O ELF permanece disponível para depuração; a saída que o jogador abre é `build/gateblade.gba`.
+`tools/maps.py` expande cada segmento em células vizinhas e valida que o caminho é cardinal, contínuo e não cruza a si mesmo. O gerador escolhe oito pontos de construção adjacentes, fora da estrada. Uma busca em largura verifica se o herói ainda consegue atender todos os pontos quando todas as torres estão construídas e se consegue alcançar a saída.
 
-## 4. Inicializar o console e organizar o programa
+A construção transforma esses dados em binários incluídos na ROM com `.incbin`. Não existe leitura de JSON no GBA. O assembly recebe ponteiros para mapa, rota e pontos, mais os parâmetros da fase.
 
-Em um aplicativo comum, muitas decisões de inicialização já foram tomadas pelo sistema operacional ou pelo runtime. Aqui, elas aparecem no projeto.
+![Primeira fase: estrada reta, pontos dourados, base azul e portal fechado](../docs/evidencias/2026-10-24/map-01.png)
 
-O [startup](../src/main.s) seleciona o modo da CPU usado pelo programa, configura a pilha em RAM interna e limpa a seção `.bss`. Depois prepara vídeo, paletas e sprites e mostra o título.
+Cada mapa tem 14 × 7 células de 16 pixels. A campanha passa por First Watch, River Bend, Frost Pass, Bramble Way, Amber Road, Ember Steps, Moon Cross, Glass Maze, Ashen Trail e Warden Keep. São dez geometrias, acompanhadas por cinco temas de paleta, e não dez recolorações do mesmo cenário.
 
-O programa está dividido em poucos arquivos:
+## 5. Implementar movimento e interação por células
 
-| Arquivo | Responsabilidade |
-| --- | --- |
-| `src/main.s` | Entrada, inicialização, espera de VBlank, controles e estado em RAM |
-| `src/game.s` | Movimento, ataques, inimigos, chefe, portas e estados da partida |
-| `src/render.s` | Cenário, textos, sprites e efeitos sonoros |
-| `src/constants.inc` | Endereços, botões, estados e campos dos inimigos |
-| `src/gba.ld` | Distribuição de código e dados na memória |
+O herói mantém célula atual, destino e distância restante. Cada atualização avança dois pixels; um passo de 16 pixels leva oito atualizações. Durante esse passo, a direção não muda. Árvores, a base, torres construídas e o portal fechado bloqueiam o movimento.
 
-As rotinas que alteram registradores preservados pelo chamador guardam e restauram esses valores na pilha. Essa disciplina ajuda a manter chamadas previsíveis em um programa sem a organização automática de uma linguagem de nível mais alto.
+Construir exige estar alinhado à grade e apontar para um ponto vizinho. O cursor indica a célula à frente. Direcional + A permite virar e construir sem começar a andar sobre o ponto. A compra responde ao momento em que A é pressionado: segurar o botão não gera compras ou melhorias repetidas.
 
-## 5. Um erro que a montagem não revelou
+Esse detalhe de controle é pequeno, mas necessário. Sem ele, tentar apontar para um ponto vazio poderia fazer o herói iniciar um passo justamente quando deveria interagir.
 
-A primeira ROM foi montada e recebeu um cabeçalho válido, mas a execução mostrou uma tela vazia. O contador de quadros do programa permanecia em zero.
+## 6. Fazer os inimigos seguir a estrada
 
-A inspeção do estado da CPU revelou execução em EWRAM, embora o programa tivesse sido ligado para ROM. O mGBA havia classificado a imagem pequena como um programa multiboot. Nessa condição, a própria limpeza de `.bss` apagava parte do programa que o emulador havia carregado na RAM.
+Os Brumins seguem uma lista ordenada de células. Cada inimigo guarda sua posição, a próxima célula e o avanço em pixels. Ele se aproxima do próximo ponto em um eixo por vez; ao alcançá-lo, segue para o seguinte. Não persegue o herói e não precisa recalcular a rota.
 
-A investigação chegou à função `GBAIsMB`, no [código do mGBA 0.10.5](https://github.com/mgba-emu/mgba/blob/0.10.5/src/gba/gba.c). A heurística considera o conteúdo próximo ao offset `0xC0`, entre outras condições.
+Os comuns verdes andam um pixel a cada duas atualizações. Os corredores laranja andam a cada atualização. A FROST reduz temporariamente esse movimento para um pixel a cada quatro atualizações.
 
-Uma primeira tentativa com um desvio de +24 nessa posição não resolveu: a análise seguinte ainda encontrava referências de RAM. A solução adotada foi colocar em `0xC0` um desvio para trás, de volta à entrada de cartucho. O início principal da ROM continua saltando para o startup correto. O projeto é uma ROM de cartucho e não oferece inicialização multiboot.
+A primeira fase tem uma onda. Da segunda à nona, são duas por mapa. A última tem três, com o Guardião de 48 pontos de vida na terceira: **vinte ondas e 146 inimigos no total**. O número de inimigos e sua vida aumentam ao longo da campanha; o intervalo entre entradas diminui. O jogador decide quando iniciar cada onda com R.
 
-Depois da correção, o contador avançou e a tela inicial apareceu. Um teste de regressão verifica essa entrada. Foi uma demonstração concreta de que montagem, linkedição, geração de ROM e execução são verificações diferentes.
+## 7. Dar funções diferentes às torres
 
-## 6. Desenhar o cenário e os personagens
+Foram implementadas três torres, liberadas gradualmente:
 
-Gateblade usa modo 0, um background de tiles e sprites de hardware para os personagens e a espada. Cada peça gráfica é organizada em tiles de 8 × 8, com quatro bits por pixel. As referências usadas foram os capítulos de [backgrounds](https://gbadev.net/tonc/regbg.html) e [sprites](https://gbadev.net/tonc/regobj.html) do Tonc.
+| Torre | Liberação | Preço | Função |
+| --- | --- | --- | --- |
+| BOLT | Fase 1 | 20 moedas | Disparos mais frequentes |
+| FROST | Fase 3 | 30 moedas | Dano e lentidão |
+| BLAST | Fase 6 | 40 moedas | Dano em área |
 
-O [gerador de recursos](../tools/assets.py) descreve a arte em matrizes e formas simples: piso, paredes, portas, corações, letras, herói, slimes, sentinelas, chefe e arcos da espada. Em seguida empacota os pixels e as paletas no formato usado pela ROM. Os recursos visuais não dependem de baixar sprites ou fontes de outros jogos.
+L alterna o tipo selecionado. A constrói ou melhora uma torre existente. Cada uma possui dois níveis, e melhorar custa 20 moedas: aumenta dano e alcance e reduz a recarga. A FROST também prolonga a lentidão.
 
-Durante a inicialização, DMA3 transfere esses recursos para a memória de vídeo e para as paletas. A configuração de transferência segue o mecanismo documentado no [Tonc sobre DMA](https://gbadev.net/tonc/dma.html).
+A torre examina os inimigos vivos e escolhe o mais adiantado na estrada dentro de seu alcance. A distância usada é Manhattan: diferença horizontal mais diferença vertical. O alcance forma um losango. A BLAST aplica dano aos inimigos próximos do alvo principal, sem acertar esse alvo duas vezes no mesmo disparo.
 
-Durante a partida, o programa modifica o mapa para o HUD e a porta, e atualiza atributos na OAM para posicionar os objetos. O herói tem orientações e quadros de caminhada; dano e preparação do chefe recebem sinalização visual.
+O dano é instantâneo. O pequeno efeito entre a torre e o alvo representa o disparo, mas não simula um projétil com movimento e colisão. Essa escolha mantém a implementação pequena e determinística.
 
-## 7. Ler os controles e atualizar uma vez por quadro
+![Frost Pass em defesa, com torres distribuídas pela nova rota](../docs/evidencias/2026-10-24/battle-03-1.png)
 
-O GBA expõe os botões por um registrador de entrada. Seus bits são ativos em nível baixo: um botão pressionado aparece como zero. O programa inverte os bits e aplica uma máscara, seguindo a descrição do [Tonc sobre controles](https://gbadev.net/tonc/keys.html).
+A [arquitetura](../docs/arquitetura-td.md) registra offsets das estruturas em RAM, alcances, dano, duração dos efeitos e a diferença entre o valor do contador de recarga e o intervalo observado entre disparos.
 
-Guardamos tanto os botões atuais quanto os que acabaram de ser pressionados. Movimento e repetição da espada usam o estado atual; começar e pausar usam a transição, evitando alternar a pausa repetidamente por manter Start apertado.
+## 8. Fazer as moedas acompanharem a campanha
 
-O loop espera sair do VBlank atual e entrar no próximo antes de atualizar. Essa segunda condição evita executar várias atualizações no mesmo período. O teste da tela inicial observa exatamente sessenta incrementos do contador ao executar sessenta quadros do emulador.
+A partida começa com 60 moedas. Cada inimigo eliminado rende cinco, concedidas uma única vez. Inimigos que chegam à base não rendem moedas. O saldo máximo é 999.
 
-Não há interrupção de vídeo nesta versão; usamos consulta de `VCOUNT`. É uma escolha pequena e explícita para o protótipo. O [capítulo de vídeo do Tonc](https://gbadev.net/tonc/video.html) explica as etapas de desenho e VBlank. O jogo trabalha no ritmo de quadros do GBA, próximo de 59,73 Hz, sem uma simulação de tempo variável.
+Como a campanha exige mudar de cenário, foi adotado um reembolso ao atravessar o portal: o investimento em torres e melhorias volta ao saldo, junto com 20 moedas de bônus. As torres são desmontadas e a base seguinte volta a seis pontos. Assim, o jogador reconstrói a defesa no novo mapa com o capital acumulado.
 
-## 8. Fazer a espada causar dano uma vez
+Essa é uma decisão de balanceamento, documentada com sua alternativa. Sem reembolso, a troca obrigatória de mapa poderia consumir repetidamente os recursos da campanha. Com reembolso integral, existe o risco de as últimas fases ficarem fáceis demais. A versão atual demonstra funcionamento; partidas com pessoas devem orientar o ajuste desse equilíbrio.
 
-Ao atacar, o herói mantém sua direção e uma caixa de 32 × 32 é posicionada à sua frente. Essa caixa é comparada com a área de cada adversário vivo. A interseção aplica um ponto de dano.
+## 9. Testar o assembly dentro do emulador
 
-O detalhe que evita um erro comum é o identificador do golpe. A animação dura vários quadros; sem controle adicional, um adversário poderia receber dano a cada atualização durante o mesmo movimento da espada.
+O frontend de testes usa a interface libretro do mGBA 0.10.5. Os cenários isolados preparam condições em EWRAM para verificar uma regra por vez: falta de moedas, dano em área, prioridade de alvo, torre fora de alcance, pausa ou chefe chegando a uma base com pouca vida.
 
-Cada ataque aumenta `attack_id`. Cada adversário guarda o identificador do último golpe recebido. Se os dois valores já são iguais, não recebe outro dano daquele ataque. O teste mantém um inimigo ao alcance durante a animação e confere que ele perde apenas um ponto.
+Esses cenários são diferentes da campanha completa. Nela, o bot lê estado e dados do mapa para decidir controles, mas **não escreve no estado do jogo**. Ele anda, constrói, melhora, inicia ondas e atravessa as saídas usando botões. O registro integral de entradas é preservado para auditoria.
 
-O ataque tem nove quadros ativos e intervalo de vinte quadros. Durante sua parte ativa, o herói não anda nem muda a direção do golpe. Segurar A repete o ataque quando o intervalo permite. Ao receber dano de contato, o herói ganha 75 quadros de proteção, para não perder todos os corações numa única sobreposição.
+A validação passou em quinze grupos. A campanha chegou à vitória em **15.907 frames emulados**, aproximadamente 4 minutos e 26 segundos, com vinte ondas concluídas, 146 eliminações e nenhum inimigo chegando à base. Cada passagem também conferiu um avanço do jogo por frame, para detectar atualizações perdidas.
 
-A revisão também encontrou um caso de borda: se o herói tem um coração e o chefe causa dois, o resultado antes do limite é negativo. A condição de derrota precisa tratar vida menor ou igual a zero, não apenas igualdade. Isso foi corrigido e recebeu um cenário próprio no teste de derrota.
+Isso é evidência de um percurso completo e reproduzível. Não substitui teste com jogadores, medição abrangente de desempenho ou teste em console físico. A demonstração mostra trechos reais, sem aceleração dentro dos trechos, com cortes entre momentos da campanha e sem áudio.
 
-## 9. Ligar as mortes à saída da sala
+![Guardião na terceira onda do décimo mapa](../docs/evidencias/2026-10-24/battle-10-3.png)
 
-Ao carregar uma sala, o jogo inicializa os adversários e o contador de inimigos vivos. Quando um inimigo passa de vida positiva para zero, o contador diminui uma vez e o total de eliminações aumenta.
+As primeiras tentativas do novo bot encontraram problemas no próprio teste: ele esperava continuar no portal depois de uma transição que corretamente reposicionava o herói; depois tentou andar durante a animação de espada. Um cenário de lentidão também começou exatamente sobre o seu destino intermediário, acrescentando uma atualização de troca de nó à medição. Esses erros foram corrigidos nas ferramentas e registrados no [diário](../docs/diario/2026-10-24-tower-defense.md).
 
-Esse contador é usado tanto no desenho da porta quanto na regra de travessia. Enquanto for maior que zero, a posição do herói é limitada pela parede. Quando chega a zero, abre-se a passagem central ao norte.
+## 10. Reproduzir e criar uma variação
 
-O avanço ainda exige que o herói esteja alinhado com a porta e alcance sua posição. Na última sala, a mesma travessia leva à vitória. Derrotar o chefe sem alcançar a saída não encerra imediatamente a partida.
-
-## 10. Tornar o chefe diferente
-
-O Guardião não é só um inimigo comum com mais vida. Ele tem uma sequência de comportamento: aproximar, preparar, investir e recuperar. A preparação pisca e exibe `WARDEN IS CHARGING!`; a recuperação mostra a oportunidade de atacar.
-
-O dano da espada não congela a sequência do chefe. Isso evita neutralizar a investida apenas mantendo o botão de ataque pressionado. Seu dano de contato é de dois corações, em vez de um.
-
-O primeiro controlador automatizado chegou à última sala, aproximou-se demais e morreu. A correção foi na estratégia do controlador: manter alcance de espada e recuar durante preparação e investida. A vida do herói não foi aumentada por fora, e o chefe não foi removido ou enfraquecido para obter a demonstração.
-
-## 11. Testar a ROM de verdade
-
-Para validar o jogo, construímos o mGBA 0.10.5 a partir de um arquivo oficial com SHA-256 conferido. O frontend SDL permite jogar; o núcleo libretro permite executar a mesma ROM por um pequeno frontend Python.
-
-Esse frontend fornece botões, recebe quadros de vídeo e consulta o mapa de memória exposto pelo emulador. Os símbolos do ELF permitem identificar o estado relevante sem adivinhar endereços.
-
-Há dois tipos de verificação. Os cenários focados preparam situações em RAM para testar regras como dano, alcance e invulnerabilidade. A campanha completa usa somente entradas de controle. Essas duas modalidades são identificadas no código e no relatório.
-
-Os nove grupos de teste cobrem cabeçalho e entrada, início do jogo, limites e porta fechada, pausa, espada e som, dano e proteção, derrota e reinício, ciclo do chefe e campanha completa com reinício após vitória.
-
-O percurso completo atravessou as quatro salas, derrotou dez adversários ao todo e terminou com dois corações. A ROM validada tem 14.456 bytes; o relatório e o hash estão em [evidências](../docs/evidencias/2026-10-23/README.md). Esses resultados descrevem esta versão e este percurso, não uma avaliação de dificuldade feita por um grupo de jogadores.
-
-## 12. Ver o resultado e reproduzir
-
-![Gateblade executando no mGBA](../docs/evidencias/2026-10-23/gateblade-demo.gif)
-
-A demonstração foi capturada dos quadros reais da ROM, com o controlador automatizado. O GIF mostra a campanha e a vitória; não é uma simulação visual feita separadamente. A ampliação preserva os pixels, e a demonstração não inclui áudio.
-
-Para testar a partir do repositório:
+Com as dependências descritas no [guia de reprodução](../docs/reproducao.md), execute na raiz do projeto:
 
 ```sh
 make
@@ -160,20 +119,21 @@ make verify
 make play
 ```
 
-Esses comandos pressupõem as dependências do [guia de reprodução](../docs/reproducao.md). Para jogar, use direcional, A e Start; no frontend SDL preparado aqui, são setas, X e Enter. Para regravar a captura, `make demo` também requer FFmpeg.
+`make` produz `build/gateblade.gba`. `make emulator` prepara o mGBA a partir do arquivo oficial e confere seu hash. `make verify` executa os testes e verifica links locais da documentação. Para gravar os trechos de demonstração e preparar a distribuição:
 
-## O que a IA ajudou a fazer — e o que precisou ser verificado
+```sh
+make demo
+make package
+```
 
-A IA ajudou a transformar o pedido em uma implementação, escrever assembly, gerar recursos por script, preparar testes e organizar o relato. O processo também produziu erros concretos: expressões rejeitadas pelo assembler, configuração incompatível do frontend SDL, identificação incorreta da ROM como multiboot e uma estratégia de combate que perdia no chefe.
+Para experimentar um jogo próprio, uma sequência prática é alterar a rota de uma fase em `assets/stages.json`, reconstruir e observar os pontos gerados. Em seguida, ajustar ondas e parâmetros, criar novas formas em `tools/assets.py` e modificar as regras em `src/game.s`. Os testes devem acompanhar a mudança: alterar a quantidade de fases ou a economia também exige revisar as expectativas da campanha.
 
-O que dá sustentação ao artigo não é a confiança no texto gerado pela IA, mas a ligação entre código, comandos, fontes e resultados observados. As tentativas e correções estão preservadas nas [decisões](../docs/decisoes/0003-ferramentas-e-validacao.md) e no [diário](../docs/diario/2026-10-23-implementacao.md).
+O código é público para consulta. A licença de reutilização ainda precisa ser definida pelo mantenedor; a disponibilidade no GitHub não resolve essa escolha. A ROM identificada por checksum, os relatórios, as capturas e as [referências técnicas](../docs/referencias.md) permitem conferir qual versão sustenta as afirmações deste relato.
 
-Não foi feita uma comparação de tempo com e sem IA. Também não houve teste em GBA físico. A validação local foi realizada em emulador, sem fornecer um arquivo externo de BIOS.
+## O papel da IA e o que falta avaliar
 
-## O que melhorar depois
+A IA apoiou a tradução dos requisitos em estruturas, algoritmos, assembly, geradores e testes. As escolhas humanas que orientaram esta etapa foram o gênero, a movimentação por células, os pontos ao lado da rota, as dez fases e a progressão por moedas e torres. Os valores específicos e a estratégia automatizada foram decisões de implementação registradas, sem atribuir ao autor uma revisão manual de cada instrução ou inventar uma comparação de produtividade.
 
-A primeira versão resolve o ciclo pedido, mas ainda é pequena. Os próximos caminhos possíveis incluem obstáculos com colisão, novos padrões de ataque, música, mais variedade visual, configuração de encontros por dados e testes em console físico.
+A própria validação precisou ser revisada quando suas premissas estavam erradas. Por isso o projeto mantém código, decisões, falhas e evidências juntos, em Markdown e arquivos reproduzíveis.
 
-Para adicionar salas, eu começaria refatorando a configuração de inimigos. Apenas aumentar uma constante não é suficiente: a quantidade e o arranjo de adversários também precisam respeitar os limites de memória e das rotinas existentes.
-
-A licença de reutilização do projeto ainda precisa ser definida pelo mantenedor antes de apresentar o código como uma base licenciada para outros projetos. O repositório já é público e inclui o que foi usado para construir, testar e explicar esta versão.
+Ainda faltam testes em GBA físico, partidas com pessoas e revisão editorial do texto antes da publicação no blog. A campanha atual é linear, sem salvamento, mundo aberto, venda de torres ou música. Esses limites delimitam a versão entregue e ajudam a decidir qual experimento fazer a seguir.

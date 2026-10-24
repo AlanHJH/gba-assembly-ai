@@ -32,3 +32,9 @@ Consultadas na mesma data:
 - [mGBA 0.10.5: CMake](https://github.com/mgba-emu/mgba/blob/0.10.5/CMakeLists.txt), [version.cmake](https://github.com/mgba-emu/mgba/blob/0.10.5/version.cmake) e [libretro.h](https://github.com/mgba-emu/mgba/blob/0.10.5/src/platform/libretro/libretro.h) — configuração da construção e interface do frontend de testes; esses arquivos também foram lidos da distribuição verificada.
 
 As fontes do mGBA são dependência de desenvolvimento e preservam a licença própria upstream. Não foram incorporadas como código executável da ROM nem adicionadas ao histórico Git deste projeto.
+
+## Evolução para tower defense — 24 de outubro de 2026
+
+Foram consultadas novamente as referências [Tonc: backgrounds](https://gbadev.net/tonc/regbg.html), [Tonc: controles](https://gbadev.net/tonc/keys.html) e [GNU assembler: opções ARM](https://sourceware.org/binutils/docs/as/ARM-Options.html) para a composição por tiles, leitura de teclas e seleção ARM7TDMI. As regras de ondas, economia, prioridades e mapas são decisões próprias, descritas na [decisão 0004](decisoes/0004-campanha-tower-defense.md); não são regras atribuídas a essas fontes.
+
+Nenhuma arte, mapa ou trecho de jogo comercial foi incorporado. A comparação com movimentação clássica por tiles orienta o controle; não representa reprodução de recursos de Pokémon.

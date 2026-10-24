@@ -4,6 +4,7 @@ Uses only Python's standard library. No downloaded sprites, font or game engine.
 """
 from pathlib import Path
 import struct
+from maps import generate as generate_maps
 
 OUT = Path('build/assets')
 FONT = {
@@ -199,6 +200,35 @@ def generate():
             for x, bit in enumerate(row):
                 if bit == '1':
                     bg[ord(char)][y][x+1] = 10
+    # Four-tile, 16x16 terrain pieces: path, pad, base, portal and trees.
+    for start,kind in ((9,'path'),(16,'pad'),(20,'base'),(24,'portal'),(28,'tree')):
+        im=canvas(16)
+        rect(im,0,0,16,16,1)
+        if kind=='path':
+            rect(im,0,0,16,16,5)
+            for y in range(1,16,5):
+                for x in range((y//5)%2*3,16,6): rect(im,x,y,4,3,7)
+        elif kind=='pad':
+            rect(im,2,2,12,12,3);rect(im,3,3,10,10,12)
+            rect(im,5,5,6,6,3);rect(im,7,4,2,8,12);rect(im,4,7,8,2,12)
+        elif kind=='base':
+            rect(im,1,2,14,13,3);rect(im,3,5,10,10,8)
+            rect(im,5,7,6,8,6);rect(im,6,9,4,6,8)
+            for x in (1,6,11): rect(im,x,0,4,4,6)
+        elif kind=='portal':
+            rect(im,2,1,12,14,3);rect(im,4,3,8,12,9)
+            rect(im,6,5,4,10,1);rect(im,7,7,2,4,9)
+        else:
+            rect(im,7,8,3,8,7)
+            for y in range(2,12):
+                for x in range(1,15):
+                    if abs(x-8)+abs(y-7)<8: im[y][x]=9 if (x+y)%4 else 2
+        for offset in range(4):
+            # Reconstruct 8x8 matrices so the shared tile encoder stays simple.
+            tile=canvas(8)
+            for y in range(8):
+                for x in range(8): tile[y][x]=im[(offset//2)*8+y][(offset%2)*8+x]
+            bg[start+offset]=tile
     (OUT / 'bg.bin').write_bytes(b''.join(tiles(im) for im in bg))
     objects = bytearray()
     for direction in range(4):
@@ -212,8 +242,27 @@ def generate():
     assert len(objects) == 80 * 32
     for direction in range(4):
         objects.extend(tiles(slash(direction)))
+    assert len(objects)==144*32
+    for tower_type in range(3):
+        for upgraded in (False,True):
+            im=canvas(16)
+            rect(im,2,12,12,3,2);rect(im,4,6,8,8,3)
+            rect(im,5,3,6,7,4);rect(im,7,1,2,8,6)
+            rect(im,3,5,10,2,7)
+            if tower_type==1:
+                for k in range(5): rect(im,5+k,2+k,6-2*abs(2-k),1,6)
+            if tower_type==2: rect(im,5,2,8,6,2);rect(im,7,3,6,3,6)
+            if upgraded: rect(im,5,10,6,2,7)
+            objects.extend(tiles(im))
+    for color in (6,8,7):
+        im=canvas(8);rect(im,2,2,4,4,color);objects.extend(tiles(im))
+    objects.extend(bytes(5*32)) # Reserve through tile 175.
+    im=canvas(16)
+    for x,y in ((0,0),(12,0),(0,12),(12,12)):
+        rect(im,x,y,4,1,7);rect(im,x,y,1,4,7)
+    objects.extend(tiles(im))
     (OUT / 'obj.bin').write_bytes(objects)
-    base = ['0b101d','161e2e','1e2b3d','293046','3d4961','65728d','b8cee0','dba65b',
+    base = ['0b101d','284333','385340','293046','3d4961','76664e','b8cee0','b99c6b',
             '66b4ed','60dbad','dbe6eb','ee6874','f4cf76','9d80c8','344056','ffffff']
     bg_palettes = []
     for text in ('dbe6eb', 'f4cf76', 'ee6874', '60dbad'):
@@ -228,9 +277,21 @@ def generate():
         ['000000','151c2b','492c47','a74561','d5696d','18334c','e9ac66','f4cfac'],
         ['000000','151c2b','18334c','3985ab','62c8da','edc596','e8f3e8','f4cf76'],
         ['000000','ffffff','ffffff','ffffff','ffffff','ffffff','ffffff','ffffff'],
+        ['000000','151c2b','25374d','39789a','66b4ed','edc596','e8f3e8','f4cf76'],
+        ['000000','151c2b','294058','589dc9','93dafa','edc596','e8f3e8','a4eff2'],
+        ['000000','151c2b','573e38','b56645','e99553','edc596','f4cf76','e9ac66'],
     ]
     (OUT / 'obj.pal').write_bytes(b''.join(palette(bank + ['000000'] * 8) for bank in banks).ljust(512, b'\0'))
-    print(f'Original assets: 128 BG tiles, {len(objects)//32} OBJ tiles, two 256-color palettes.')
+    themes={'green':('284333','385340'),'ice':('3a5367','5a7586'),'autumn':('514831','6a5a38'),
+            'ember':('49373c','61444a'),'night':('292d48','3c4161')}
+    import json
+    seasonal=[]
+    for stage in json.loads(Path('assets/stages.json').read_text()):
+        colors=base.copy();colors[1],colors[2]=themes[stage['theme']]
+        seasonal.append(palette(colors))
+    (OUT/'stage.pal').write_bytes(b''.join(seasonal))
+    generate_maps()
+    print(f'Original assets: 128 BG tiles, {len(objects)//32} OBJ tiles, two palettes, ten themes.')
 
 
 if __name__ == '__main__':

@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parent.parent
 
 def export():
     source = ROOT/'article/artigo.md'
+    version = (ROOT/'VERSION').read_text().strip()
     def replace(match):
         image, label, destination = match.groups()
         if re.match(r'^[a-zA-Z][a-zA-Z0-9+.-]*:', destination) or destination.startswith('#'):
@@ -15,7 +16,7 @@ def export():
         target = (source.parent/filename).resolve()
         relative = target.relative_to(ROOT).as_posix()
         assert target.is_file(), destination
-        base = 'https://raw.githubusercontent.com/AlanHJH/gba-assembly-ai/v0.1.0/' if image else 'https://github.com/AlanHJH/gba-assembly-ai/blob/v0.1.0/'
+        base = f'https://raw.githubusercontent.com/AlanHJH/gba-assembly-ai/v{version}/' if image else f'https://github.com/AlanHJH/gba-assembly-ai/blob/v{version}/'
         url = base+relative+(separator+anchor if separator else '')
         return f'{image}[{label}]({url})'
     result = re.sub(r'(!?)\[([^\]]*)\]\(([^)]+)\)', replace, source.read_text(encoding='utf-8'))

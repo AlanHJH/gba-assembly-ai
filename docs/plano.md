@@ -1,35 +1,37 @@
 # Plano de desenvolvimento
 
-Atualizado em 23 de outubro de 2026. A proposta inicial evoluiu para a primeira versão jogável de Gateblade; a mecânica foi especificada pelo usuário antes da implementação.
+Atualizado em 24 de outubro de 2026.
 
-## Entregas concluídas localmente
+## Estado atual: Gateblade TD 0.2.0
 
-- [x] Projeto separado do site e repositório público no GitHub.
-- [x] Diário, decisões, referências e organização de evidências.
-- [x] Toolchain GNU Binutils para ARM7TDMI e geração de ROM.
-- [x] Cabeçalho de cartucho e startup próprios, sem runtime C.
-- [x] Cenário por tiles, sprites e gráficos originais gerados por script.
-- [x] Movimento, limites da sala e ataque de espada direcional.
-- [x] Dano, vida, invulnerabilidade e reinício após derrota.
-- [x] Três salas de inimigos comuns e portas condicionadas à eliminação de todos.
-- [x] Chefe com preparação, investida e recuperação.
-- [x] Travessia da última saída, vitória e nova campanha.
-- [x] Pausa e efeitos sonoros de ações.
-- [x] Nove grupos de teste na ROM real, incluindo campanha por botões sem escrita de estado.
-- [x] Demonstração capturada da ROM e roteiro de reprodução.
-- [x] Artigo completo em português, sujeito à revisão editorial do autor.
+- [x] Projeto independente do site, público no GitHub.
+- [x] Startup e regras próprias em assembly ARM7TDMI.
+- [x] Dez mapas com rotas autorais distintas e pontos fora da estrada.
+- [x] Movimento cardinal por tiles, colisões e cursor de construção.
+- [x] Tutorial inicial e vinte ondas na campanha.
+- [x] Brumins comuns, corredores e chefe na última onda.
+- [x] Moedas por eliminação e saldo entre fases.
+- [x] Três tipos de torre e melhoria até nível 2.
+- [x] Desbloqueios progressivos, lentidão e dano em área.
+- [x] Base com vida, derrota, pausa e reinício.
+- [x] Portal condicionado ao término da defesa e travessia pelo herói.
+- [x] Quinze grupos de teste no mGBA, incluindo campanha só por botões.
+- [x] Guia, arquitetura, decisão, diário e artigo em Markdown.
+- [x] Capturas e demonstração da ROM real, com cortes identificados.
 
-## Distribuição e verificação remota
+Os comandos `make verify`, `make demo` e `make package` são o processo de validação e distribuição. O resultado remoto da release e da integração contínua é registrado no diário, com hash da ROM, sem inferir sucesso da existência de um workflow.
 
-A ROM e o SHA-256 são preparados por `make package`. O workflow de GitHub Actions executa construção e testes. O diário registra a publicação e o resultado remoto observado; não se infere sucesso apenas da existência do workflow.
+## Histórico preservado
 
-## Próximos passos opcionais
+A tag e a release [v0.1.0](https://github.com/AlanHJH/gba-assembly-ai/releases/tag/v0.1.0) mantêm o primeiro jogo de ação em quatro salas, com seu [artigo](../article/artigo-v0.1.0.md) e [evidências](evidencias/2026-10-23/README.md). A nova direção foi solicitada pelo usuário e registrada na [decisão 0004](decisoes/0004-campanha-tower-defense.md).
 
-- Testar em console físico e registrar o equipamento e a ROM utilizados.
-- Fazer testes com jogadores e ajustar dificuldade a partir das observações.
-- Definir licença de reutilização do código e da documentação.
-- Refatorar configuração de encontros antes de aumentar o número de salas.
-- Adicionar obstáculos com colisão, padrões novos, música ou mais variedade visual.
-- Revisar o artigo e adaptar caminhos de imagens e título para a publicação no blog.
+## Próximos passos
 
-O jogo, a ROM e o texto permanecem independentes do repositório do site. Nenhum artigo foi integrado ou publicado no blog durante esta implementação.
+- Testar com pessoas: legibilidade do tutorial, controles, dificuldade e economia.
+- Avaliar se o reembolso integral e o bônus de transição deixam as últimas fases fáceis demais.
+- Testar em GBA físico, registrando equipamento e hash.
+- Definir licença de reutilização.
+- Avaliar salvamento, novas animações, áudio de torres e mais mapas depois do feedback.
+- Revisar editorialmente o artigo e integrá-lo ao blog em etapa separada.
+
+A campanha é um protótipo funcional; não foi medida a dificuldade para jogadores humanos. O artigo não foi publicado automaticamente no site pessoal.

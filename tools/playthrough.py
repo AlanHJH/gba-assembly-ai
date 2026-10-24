@@ -1,99 +1,148 @@
-"""A complete playthrough using controller input only, never memory writes."""
+"""Complete TD campaign: real controller input only, no EWRAM writes.
+
+The bot reads public map data and emulator state to walk, construct and defend.
+The optional video contains selected, unaccelerated excerpts with cuts.
+"""
+from collections import deque
 import json
-from pathlib import Path
+import shutil
 from emulator import Emulator, ROOT, png
 
-A, START, RIGHT, LEFT, UP, DOWN = 1, 8, 16, 32, 64, 128
+A,B,START,RIGHT,LEFT,UP,DOWN,R,L=1,2,8,16,32,64,128,256,512
+DIRECTIONS=((0,-1,UP),(1,0,RIGHT),(0,1,DOWN),(-1,0,LEFT))
 
 
-def run(emu, record=False):
-    emu.reset()
-    initial_frame = emu.total_frames
-    emu.record = record
-    emu.recorded = []
-    inputs = []
-    rooms = []
-    previous_room = -1
-    captured = set()
-    def step(buttons=0, count=1):
-        if inputs and inputs[-1]['buttons'] == buttons:
-            inputs[-1]['frames'] += count
-        else:
-            inputs.append({'buttons': buttons, 'frames': count})
-        before = emu.read('frame_tick')
-        emu.frames(count, buttons)
-        assert emu.read('frame_tick')-before == count, 'Skipped or duplicated game update during campaign'
-    step(0, 60)
-    step(START)
-    step(0, 25)
-    for frame in range(7000):
-        state = emu.read('game_state')
-        room = emu.read('room_index')
-        if room != previous_room:
-            rooms.append({'room': room+1, 'frame': emu.total_frames-initial_frame, 'hp': emu.read('player_hp')})
-            previous_room = room
-            step(0, 6)
-            if record:
-                emu.screenshot(ROOT / f'build/test-results/room-{room+1}.png')
-        if state == 4:
-            frames_to_victory = emu.total_frames-initial_frame
-            step(0, 120)
-            return {'frames_to_victory': frames_to_victory, 'emulated_frames': emu.total_frames-initial_frame,
-                    'rooms': rooms, 'hp': emu.read('player_hp'), 'kills': emu.read('total_kills'), 'inputs': inputs}
-        if state == 3:
-            raise AssertionError(f'Input-only bot died: room={room+1}, frame={frame}, kills={emu.read("total_kills")}')
-        if record:
-            scene = None
-            if room == 0 and 2 <= emu.read('attack_timer') <= 5:
-                scene = 'combat'
-            if room == 1 and emu.read('enemies_alive') == 0 and emu.read('attack_timer') == 0:
-                scene = 'gate-open'
-            if room == 3 and emu.read('enemies',24) == 1 and emu.read('enemies',28) < 30:
-                scene = 'boss-windup'
-            if scene and scene not in captured:
-                emu.screenshot(ROOT / f'build/test-results/{scene}.png')
-                captured.add(scene)
-        px, py = emu.read('player_x'), emu.read('player_y')
-        actors = []
-        for index in range(4):
-            offset = index*48
-            if emu.read('enemies', offset+8):
-                size = emu.read('enemies', offset+40)
-                ex, ey = emu.read('enemies', offset), emu.read('enemies', offset+4)
-                actors.append((abs(ex+size//2-px-8)+abs(ey+size//2-py-8), ex, ey, size, offset))
-        if not actors:
-            buttons = RIGHT if px < 112 else LEFT if px > 112 else UP
-        else:
-            _, ex, ey, size, offset = min(actors)
-            dx, dy = ex+size//2-px-8, ey+size//2-py-8
-            # Approach sword range, face the target, then hold position to attack.
-            direction = (RIGHT if dx > 0 else LEFT) if abs(dx) > abs(dy) else (DOWN if dy > 0 else UP)
-            desired_facing = {UP:0,RIGHT:1,DOWN:2,LEFT:3}[direction]
-            in_range = max(abs(dx),abs(dy)) <= size//2+20 and min(abs(dx),abs(dy)) < 20
-            buttons = A if in_range and emu.read('facing') == desired_facing else A | direction
-            # Leave melee range while the boss prepares and executes its charge.
-            phase = emu.read('enemies', offset+24)
-            if size == 32 and phase in (1,2):
-                candidates = [(abs(px-16),LEFT), (abs(208-px),RIGHT),
-                              (abs(py-32),UP), (abs(128-py),DOWN)]
-                # Choose an available direction away from the boss's center.
-                preferred = [LEFT if dx > 0 else RIGHT, UP if dy > 0 else DOWN]
-                candidates = [(space,key) for space,key in candidates if key in preferred]
-                buttons = max(candidates)[1]
-        step(buttons)
-    raise AssertionError('Input-only playthrough timed out')
+def run(emu,record=False):
+    maps=json.loads((ROOT/'build/assets/maps.json').read_text())
+    emu.reset();emu.recorded=[]
+    initial=emu.total_frames
+    initial_writes=emu.state_writes
+    inputs=[];stages=[];clips=[]
+    clip_start=None;clip_label=None
+    def recording(enabled,label=''):
+        nonlocal clip_start,clip_label
+        enabled=bool(record and enabled)
+        if emu.record and (not enabled or label!=clip_label):
+            clips.append({'scene':clip_label,'start_frame':clip_start-initial,
+                          'end_frame':emu.total_frames-initial})
+        if enabled and (not emu.record or label!=clip_label):
+            clip_start=emu.total_frames;clip_label=label
+        emu.record=enabled
+    def step(buttons=0,count=1):
+        if inputs and inputs[-1]['buttons']==buttons: inputs[-1]['frames']+=count
+        else: inputs.append({'buttons':buttons,'frames':count})
+        before=emu.read('frame_tick');emu.frames(count,buttons)
+        assert emu.read('frame_tick')-before==count, 'Skipped game update'
+        assert emu.read('game_state')!=3, f'Base fell on map {emu.read("stage_index")+1}'
+    def tap(buttons): step(0);step(buttons);step(0)
+    def position(): return emu.read('hero_col'),emu.read('hero_row')
+    def blocked(stage):
+        result={(x,y) for y in range(7) for x in range(14) if stage['grid'][y*14+x] in (2,3,4)}
+        if emu.read('stage_clear'): result.discard((12,6))
+        result|={tuple(p) for i,p in enumerate(stage['pads']) if emu.read('towers',i*32+8)}
+        return result
+    def path_to(stage,goals):
+        start=position();queue=deque([start]);parents={start:None}
+        found=None;walls=blocked(stage)
+        while queue:
+            p=queue.popleft()
+            if p in goals: found=p;break
+            for dx,dy,key in DIRECTIONS:
+                q=p[0]+dx,p[1]+dy
+                if 0<=q[0]<14 and 0<=q[1]<7 and q not in walls and q not in parents:
+                    parents[q]=(p,key);queue.append(q)
+        assert found is not None, f'No path from {start} to {goals}'
+        moves=[];p=found
+        while parents[p] is not None:
+            parent,key=parents[p];moves.append(key);p=parent
+        return list(reversed(moves)),found
+    def walk(stage,goals):
+        if emu.read('attack_timer'): step(0,10)
+        moves,end=path_to(stage,goals)
+        before=emu.read('stage_index')
+        for key in moves: step(key,8)
+        assert (position()==end or emu.read('stage_index')!=before) and emu.read('move_left')==0
+    def interact(stage,index,kind=None):
+        pad=stage['pads'][index]
+        goals={(pad[0]-dx,pad[1]-dy) for dx,dy,_ in DIRECTIONS}
+        walk(stage,goals)
+        if kind is not None:
+            while emu.read('selected_type')!=kind: tap(L)
+        p=position()
+        key=next(key for dx,dy,key in DIRECTIONS if (p[0]+dx,p[1]+dy)==tuple(pad))
+        level=emu.read('towers',index*32+8)
+        tap(key|A)
+        assert emu.read('towers',index*32+8)==level+1, 'Construction input failed'
+    recording(True,'title');step(0,90);tap(START)
+    for number,stage in enumerate(maps):
+        assert emu.read('stage_index')==number
+        recording(number==0,'tutorial construction')
+        stages.append({'map':number+1,'name':stage['name'],'start_frame':emu.total_frames-initial,
+                       'starting_coins':emu.read('coins'),'waves':[]})
+        # Prefer pads that cover more route cells; discount already covered cells.
+        coverage=[{j for j,q in enumerate(stage['route_cells']) if abs(p[0]-q[0])+abs(p[1]-q[1])<=3}
+                  for p in stage['pads']]
+        built=[];covered=set()
+        while len(built)<8:
+            index=max((i for i in range(8) if i not in built),key=lambda i:(
+                len(coverage[i]-covered)*3+len(coverage[i]),-i))
+            kinds=([0,0,0,0,0,0,0,0] if number<2 else
+                   [0,1,0,0,1,0,0,0] if number<5 else [0,1,2,0,2,0,1,0])
+            kind=kinds[len(built)]
+            cost=20+kind*10
+            if emu.read('coins')<cost: break
+            interact(stage,index,kind);built.append(index);covered|=coverage[index]
+        for index in built:
+            if emu.read('coins')<20: break
+            interact(stage,index)
+        step(0,30)
+        if record: emu.screenshot(ROOT/f'build/test-results/map-{number+1:02}.png')
+        for wave in range(stage['waves']):
+            # Reinvest rewards between waves.
+            for index in built:
+                if emu.read('coins')>=20 and emu.read('towers',index*32+8)==1:
+                    interact(stage,index)
+            recording(number in (0,2,5,9),f'map {number+1} wave {wave+1}')
+            wave_start=emu.total_frames
+            captured=False
+            tap(R)
+            while emu.read('wave_active'):
+                elapsed=emu.total_frames-wave_start
+                recording(number in (0,2,5,9) and elapsed<480,f'map {number+1} wave {wave+1}')
+                step(B,12)
+                if record and not captured:
+                    emu.screenshot(ROOT/f'build/test-results/battle-{number+1:02}-{wave+1}.png')
+                    captured=True
+                assert elapsed<4000,'Wave timed out'
+            stages[-1]['waves'].append({'wave':wave+1,'frames':emu.total_frames-wave_start,
+                                       'base_hp':emu.read('base_hp'),'coins':emu.read('coins')})
+        assert emu.read('stage_clear')==1
+        stages[-1].update(kills=emu.read('total_kills'),leaks=emu.read('total_leaks'),
+                          invested=emu.read('stage_invested'),end_coins=emu.read('coins'))
+        recording(number in (0,9),f'map {number+1} exit')
+        step(0,45)
+        if record: emu.screenshot(ROOT/f'build/test-results/clear-{number+1:02}.png')
+        walk(stage,{(12,6)})
+        if number<9: assert emu.read('stage_index')==number+1
+    assert emu.read('game_state')==4
+    victory_frame=emu.total_frames-initial
+    recording(True,'victory');step(0,120);recording(False)
+    assert emu.state_writes==initial_writes, 'Campaign wrote emulator state'
+    return {'frames_to_victory':victory_frame,'emulated_frames':emu.total_frames-initial,
+            'maps':stages,'kills':emu.read('total_kills'),'leaks':emu.read('total_leaks'),
+            'waves':emu.read('waves_cleared'),'coins':emu.read('coins'),'inputs':inputs,
+            'demo_clips':clips,'video_has_cuts':True,'state_writes':emu.state_writes-initial_writes}
 
 
-if __name__ == '__main__':
-    emu = Emulator()
+if __name__=='__main__':
+    emu=Emulator()
     try:
-        result = run(emu, record=True)
-        directory = ROOT / 'build/test-results'
-        (directory / 'playthrough.json').write_text(json.dumps(result, indent=2)+'\n')
-        emu.screenshot(directory / 'victory.png')
-        for index, frame in enumerate(emu.recorded):
-            png(directory / f'demo/frame-{index:05}.png', *frame)
-        print(json.dumps({key: value for key, value in result.items() if key != 'inputs'}, indent=2))
-        print(f'Recorded {len(emu.recorded)} real emulation frames for the demo.')
-    finally:
-        emu.close()
+        result=run(emu,record=True)
+        directory=ROOT/'build/test-results'
+        (directory/'playthrough.json').write_text(json.dumps(result,indent=2)+'\n')
+        emu.screenshot(directory/'victory.png')
+        shutil.rmtree(directory/'demo',ignore_errors=True)
+        for i,frame in enumerate(emu.recorded): png(directory/f'demo/frame-{i:05}.png',*frame)
+        print(json.dumps({k:v for k,v in result.items() if k!='inputs'},indent=2))
+        print(f'Recorded {len(emu.recorded)} real frames; selected excerpts with cuts.')
+    finally: emu.close()

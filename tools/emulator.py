@@ -73,6 +73,7 @@ class Emulator:
         self.record = False
         self.recorded = []
         self.total_frames = 0
+        self.state_writes = 0
         self.directory = str(ROOT / 'build/test-results').encode()
         Path(self.directory.decode()).mkdir(parents=True, exist_ok=True)
         output = subprocess.check_output(['arm-none-eabi-nm', '-n', 'build/gateblade.elf'], cwd=ROOT, text=True)
@@ -146,6 +147,7 @@ class Emulator:
 
     def write(self, symbol, value, offset=0):
         """Used only for isolated scenarios; never by the full-playthrough bot."""
+        self.state_writes += 1
         address = self.symbols[symbol] + offset
         C.c_uint32.from_address(self.address(address)).value = value
 
@@ -165,10 +167,10 @@ class Emulator:
 
 if __name__ == '__main__':
     emu = Emulator()
-    print('State:', {key: emu.read(key) for key in ('game_state', 'frame_tick', 'player_hp')})
+    print('State:', {key: emu.read(key) for key in ('game_state', 'frame_tick', 'base_hp')})
     emu.screenshot(ROOT / 'build/test-results/title.png')
     emu.frames(1, 8)
     emu.frames(8)
-    print('Started:', {key: emu.read(key) for key in ('game_state', 'player_hp', 'enemies_alive')})
+    print('Started:', {key: emu.read(key) for key in ('game_state', 'base_hp', 'coins')})
     emu.screenshot(ROOT / 'build/test-results/room.png')
     emu.close()

@@ -8,7 +8,7 @@ TARGET := build/gateblade
 .PHONY: all clean test emulator play verify demo package
 all: $(TARGET).gba
 
-build/assets.stamp: tools/assets.py
+build/assets.stamp: tools/assets.py tools/maps.py assets/stages.json
 	mkdir -p build
 	$(PYTHON) tools/assets.py
 	touch $@

@@ -1,23 +1,29 @@
-# Gateblade — GBA em assembly com IA
+# Gateblade TD — GBA em assembly com IA
 
-Um jogo curto de ação para **Game Boy Advance**, desenvolvido em assembly ARM7TDMI com apoio de IA e documentado para um artigo no blog de Alan Henrique Jahnel.
+Um tower defense para **Game Boy Advance**, com herói controlável, dez mapas originais e código executável próprio em assembly ARM7TDMI. O processo foi documentado em português para um artigo no blog de Alan Henrique Jahnel.
 
-Você é um herói com espada. Derrote todos os inimigos da sala, atravesse a saída liberada e continue até o Guardião. A campanha tem três salas de inimigos comuns e uma sala de chefe, com vida, pausa, derrota, reinício e vitória.
+Caminhe pelo mapa, construa torres nos pontos dourados **ao lado da rota**, defenda a base azul e ganhe moedas derrotando Brumins. Novas torres são liberadas ao longo da campanha. Quando todas as ondas terminarem, caminhe até o portal para seguir à próxima fase.
 
-**Estado:** primeira versão jogável, construída e testada no mGBA 0.10.5. Ainda sem teste em console físico.
+**Versão 0.2.0:** campanha executada no mGBA 0.10.5; testes de hardware físico continuam pendentes. A [v0.1.0](https://github.com/AlanHJH/gba-assembly-ai/releases/tag/v0.1.0), de combate por salas, permanece disponível.
 
-![Demonstração capturada da ROM real](docs/evidencias/2026-10-23/gateblade-demo.gif)
+![Trechos da campanha real, com cortes e sem áudio](docs/evidencias/2026-10-24/gateblade-demo.gif)
 
 ## Jogar
 
-Baixe a ROM `.gba` na [página de releases](https://github.com/AlanHJH/gba-assembly-ai/releases) e abra no mGBA. O [guia do jogo](docs/como-jogar.md) explica as salas e a estratégia contra o chefe.
+Baixe a ROM na [release v0.2.0](https://github.com/AlanHJH/gba-assembly-ai/releases/tag/v0.2.0) e abra no mGBA. O [guia](docs/como-jogar.md) explica a economia, as torres, as fases e a estratégia.
 
 | Ação | GBA | mGBA SDL preparado pelo projeto |
 | --- | --- | --- |
-| Movimento e direção | Direcional | Setas |
-| Espada | A | X |
-| Iniciar ou reiniciar | Start ou A | Enter ou X |
-| Pausa | Start | Enter |
+| Andar um tile / virar | Direcional | Setas |
+| Construir / melhorar ponto à frente | A | X |
+| Virar e construir sem andar | Direcional + A | Seta + X |
+| Espada | B | Z |
+| Alternar tipo disponível | L | A do teclado |
+| Enviar próxima onda | R | S do teclado |
+| Iniciar / reiniciar | Start ou A | Enter ou X |
+| Pausar / retomar | Start | Enter |
+
+Comece com três BOLT de 20 moedas. A fase 1 funciona como tutorial. FROST é liberada na fase 3 e BLAST na fase 6. Cada torre admite uma melhoria por 20 moedas. Prepare-se antes de apertar R: as ondas começam por decisão do jogador.
 
 ## Construir e verificar
 
@@ -30,33 +36,30 @@ make verify
 make play
 ```
 
-O [guia de reprodução](docs/reproducao.md) explica dependências, versões, comandos e saídas. A ROM é `build/gateblade.gba`. `make emulator` constrói o mGBA localmente a partir de um arquivo oficial com hash conferido; não o instala globalmente.
+O [guia de reprodução](docs/reproducao.md) detalha ferramentas, versões e saídas. `make emulator` constrói localmente o mGBA a partir do arquivo oficial com hash conferido. `make demo` gera trechos MP4/GIF da campanha real; requer FFmpeg. `make package` prepara a ROM, checksum e artigo com links públicos em `dist/`.
 
-`make demo` regrava uma campanha com entradas de controle e gera MP4/GIF, usando FFmpeg. `make package` verifica e prepara ROM, SHA-256 e uma cópia do artigo com links públicos em `dist/`.
-
-## Artigo e documentação
+## Documentação
 
 | Documento | Conteúdo |
 | --- | --- |
-| [Artigo em português](article/artigo.md) | Relato para revisão e publicação no blog |
-| [Como jogar](docs/como-jogar.md) | Regras, controles, inimigos, saída e chefe |
-| [Reprodução](docs/reproducao.md) | Construção, testes, emulador e demonstração |
-| [Evidências da versão](docs/evidencias/2026-10-23/README.md) | Resultados, capturas e identificação da ROM |
-| [Diário de implementação](docs/diario/2026-10-23-implementacao.md) | Alterações, comandos, falhas e correções |
-| [Escopo inicial](docs/decisoes/0001-escopo-e-metodo.md) | Requisito de assembly e método documental |
-| [Decisão do jogo](docs/decisoes/0002-gateblade-e-combate.md) | Regras e valores escolhidos |
-| [Decisão técnica](docs/decisoes/0003-ferramentas-e-validacao.md) | Toolchain, gráficos e verificação |
-| [Plano e próximos passos](docs/plano.md) | Entregas e melhorias pendentes |
-| [Referências](docs/referencias.md) | Fontes técnicas consultadas |
+| [Artigo atual](article/artigo.md) | Passo a passo para revisão editorial e publicação |
+| [Guia do jogo](docs/como-jogar.md) | Controles, tutorial, dez mapas e regras completas |
+| [Arquitetura da defesa](docs/arquitetura-td.md) | Estruturas, algoritmos e valores do assembly |
+| [Reprodução](docs/reproducao.md) | Construção, testes e demonstração |
+| [Evidências 0.2.0](docs/evidencias/2026-10-24/README.md) | Relatório, capturas e hash da ROM |
+| [Diário da evolução](docs/diario/2026-10-24-tower-defense.md) | Pedidos, decisões, comandos, falhas e validação |
+| [Decisão 0004](docs/decisoes/0004-campanha-tower-defense.md) | Nova campanha, torres fora da rota e economia |
+| [Plano](docs/plano.md) | Entregas e próximos passos |
+| [Referências](docs/referencias.md) | Fontes técnicas |
+| [Artigo da primeira versão](article/artigo-v0.1.0.md) | Histórico do jogo anterior, de quatro salas |
+| [Evidências 0.1.0](docs/evidencias/2026-10-23/README.md) | Validação preservada da versão anterior |
 
-## Organização
+## Organização e limites
 
-`src/` contém startup, lógica e renderização em assembly, além do linker script. `tools/` contém geração de recursos, preparação de cabeçalho e testes no computador. `assets/` documenta o formato dos recursos originais. `docs/` preserva o desenvolvimento e as evidências. `article/` mantém o texto editorial.
+`src/` contém startup, lógica e renderização em assembly e o linker script. `assets/stages.json` descreve os mapas; `tools/maps.py` valida e converte esses dados. `tools/assets.py` cria os gráficos originais. As ferramentas Python e o emulador executam no computador; a ROM não usa engine, libgba, C/C++ ou runtime C.
 
-O jogo não usa C/C++, engine, libgba ou runtime C dentro da ROM. Python e o código do emulador são ferramentas do computador. Os cenários isolados de teste preparam estado em RAM; a campanha completa e a demonstração usam somente botões, sem alterar vida ou pular salas.
+Os cenários isolados preparam condições na RAM do emulador. A campanha completa e a demonstração usam somente botões, sem conceder moedas ou pular mapas. Quinze grupos verificam a ROM real, incluindo a campanha de vinte ondas.
 
-## Compartilhamento e limites
+O jogo é um protótipo linear, sem salvamento, mundo aberto, venda individual de torres ou música. O balanceamento inicial foi verificado por uma estratégia automatizada e precisa de testes com pessoas. Não foi medida produtividade com e sem IA. A licença de reutilização ainda será definida pelo mantenedor.
 
-Repositório público: [AlanHJH/gba-assembly-ai](https://github.com/AlanHJH/gba-assembly-ai). A publicação do texto no site pessoal é uma etapa editorial separada. A licença de reutilização do código e da documentação ainda será definida pelo mantenedor.
-
-Esta versão tem quatro salas fixas. Não inclui salvamento, inventário, música ou geração procedural. Não há comparação medida de produtividade com e sem IA. O uso da IA, as correções e os resultados observados estão documentados sem transformar propostas em funcionalidades entregues.
+Repositório público: [AlanHJH/gba-assembly-ai](https://github.com/AlanHJH/gba-assembly-ai). O artigo continua separado do site pessoal; publicá-lo no blog é uma etapa editorial posterior.

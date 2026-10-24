@@ -7,9 +7,10 @@ from export_article import export
 root = Path(__file__).resolve().parent.parent
 directory = root/'dist'
 directory.mkdir(exist_ok=True)
-rom = directory/'gateblade-v0.1.0.gba'
+version = (root/'VERSION').read_text().strip()
+rom = directory/f'gateblade-v{version}.gba'
 shutil.copyfile(root/'build/gateblade.gba', rom)
 digest = hashlib.sha256(rom.read_bytes()).hexdigest()
-(directory/'gateblade-v0.1.0.sha256').write_text(f'{digest}  {rom.name}\n')
+(directory/f'gateblade-v{version}.sha256').write_text(f'{digest}  {rom.name}\n')
 print(f'{rom.name}: {rom.stat().st_size} bytes, SHA-256 {digest}')
 print(f'Blog article: {export().relative_to(root)}')

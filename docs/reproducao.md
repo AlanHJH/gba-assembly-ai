@@ -59,7 +59,7 @@ Foram necessárias duas escolhas concretas de configuração: desativar `USE_EPO
 make play
 ```
 
-O executável fica em `build/emulator/sdl/mgba`. Use setas, X e Enter, conforme o [guia do jogo](como-jogar.md). Também é possível abrir a ROM em uma instalação separada do mGBA. Os testes registrados não dependem de fornecer um arquivo externo de BIOS ao emulador.
+O executável fica em `build/emulator/sdl/mgba`. Use setas, X, Z, A, S e Enter, conforme o [guia do jogo](como-jogar.md). Também é possível abrir a ROM em uma instalação separada do mGBA. Os testes registrados não dependem de fornecer um arquivo externo de BIOS ao emulador.
 
 ## Validar a ROM e a documentação
 
@@ -67,11 +67,11 @@ O executável fica em `build/emulator/sdl/mgba`. Use setas, X e Enter, conforme 
 make verify
 ```
 
-O teste carrega a ROM no mGBA, verifica o cabeçalho, o início do programa, movimento, portas, pausa, espada, dano, invulnerabilidade, derrota, reinício, fases do chefe e uma campanha completa. A revisão de Markdown confere links locais e caminhos pessoais.
+O teste carrega a ROM no mGBA e executa quinze grupos: cabeçalho, início, dez rotas, movimento por tiles, construção, custos, melhorias, tipos e desbloqueios, ondas, prioridade de alvo, lentidão, dano em área, espada, chegada à base, derrota, pausa, saída e campanha completa. O cenário do chefe inclui dano excedente à vida da base. A revisão de Markdown confere links locais e caminhos pessoais.
 
 Os cenários focados preparam posições e condições em EWRAM para isolar regras. A campanha completa usa apenas botões do controle, sem escrever na memória. Essa distinção é parte do teste, não uma afirmação de que todos os cenários são partidas humanas.
 
-Saídas ficam em `build/test-results/`. O relatório principal é `report.json`. Os resultados selecionados da primeira versão estão em [evidências](evidencias/2026-10-23/README.md).
+Saídas ficam em `build/test-results/`. O relatório principal é `report.json`. Os resultados atuais estão em [evidências da versão 0.2.0](evidencias/2026-10-24/README.md). A [primeira versão](evidencias/2026-10-23/README.md) preserva seu relatório histórico.
 
 ## Regravar a demonstração
 
@@ -81,7 +81,7 @@ Com FFmpeg disponível:
 make demo
 ```
 
-São gerados um registro de entradas, capturas PNG, um MP4 e um GIF. A captura seleciona um quadro a cada seis quadros emulados; a codificação preserva aproximadamente a duração do jogo. O MP4 é ampliado para 720 × 480 e o GIF para 480 × 320, com pixels preservados. Os arquivos de demonstração não incluem áudio.
+São gerados um registro completo de entradas (`playthrough.json`), capturas PNG, um MP4 e um GIF. A campanha inteira é executada, mas o vídeo seleciona trechos do tutorial, das fases 3 e 6, da fase final e da vitória: **há cortes entre trechos**. `demo_clips` registra seus intervalos. Dentro de cada trecho, a captura seleciona um quadro a cada seis quadros emulados e usa 9,954584 quadros por segundo, preservando a duração aproximada. O MP4 é ampliado para 720 × 480 e o GIF para 480 × 320, com pixels preservados. Os arquivos de demonstração não incluem áudio.
 
 ## Preparar uma distribuição
 
@@ -89,7 +89,7 @@ São gerados um registro de entradas, capturas PNG, um MP4 e um GIF. A captura s
 make package
 ```
 
-Depois de passar nos testes, a ROM e seu SHA-256 são copiados para `dist/`. Também é exportado `dist/gateblade-artigo.md`, com os links e a imagem apontando para a versão pública no GitHub, para que o texto não dependa da estrutura local de pastas ao ser copiado para um blog. O comando não publica nada por si só. A publicação de uma release usa esses artefatos, evitando reconstruir uma ROM diferente depois da validação.
+Depois de passar nos testes, a ROM e seu SHA-256 são copiados para `dist/` com a versão de `VERSION` (atualmente `gateblade-v0.2.0.gba` e `.sha256`). Também é exportado `dist/gateblade-artigo.md`, com os links e as imagens apontando para a tag da mesma versão no GitHub, para que o texto não dependa da estrutura local de pastas ao ser copiado para um blog. O comando não publica nada por si só. A publicação de uma release usa esses artefatos, evitando reconstruir uma ROM diferente depois da validação.
 
 `make clean` remove os resultados do jogo e dos testes, preservando a origem baixada e a construção do emulador. Saídas em `build/` e `dist/` não são versionadas; as evidências selecionadas em `docs/evidencias/` são.
 

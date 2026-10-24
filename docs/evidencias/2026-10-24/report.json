@@ -1,0 +1,277 @@
+{
+  "emulator": "mGBA 0.10.5 / libretro, verified upstream archive",
+  "rom_sha256": "39a85dabf16ab6242b33440a13292bfa6bac4fb441bf109bc7ae8f86c5f6bd36",
+  "rom_bytes": 22520,
+  "checks": [
+    "Cartridge header and non-multiboot entry",
+    "Ten unique routes, twenty waves, eight reachable off-route pads per map",
+    "Title and one update per VBlank",
+    "Eight-frame grid steps, fixed direction, obstacles and closed portal",
+    "Construction, upgrade, prices, invalid purchases and A edge",
+    "Progressive type unlocks and cannon price",
+    "Wave edge, route movement and final boss spawn",
+    "Automatic range, progress priority, upgrade and exact kill rewards",
+    "Frost damage and quarter-speed movement",
+    "Cannon splash, exclusions and multiple overkill rewards",
+    "Directional sword, one hit per swing and PSG audio",
+    "Base leaks, boss overkill defeat and clean restart",
+    "Pause freezes movement, economy, spawning and combat",
+    "All waves required, walking exit, capital refund and gold cap",
+    "Ten-map, twenty-wave campaign and restart using buttons only"
+  ],
+  "input_only_campaign": {
+    "frames_to_victory": 15907,
+    "emulated_frames": 16027,
+    "maps": [
+      {
+        "map": 1,
+        "name": "FIRST WATCH",
+        "start_frame": 93,
+        "starting_coins": 60,
+        "waves": [
+          {
+            "wave": 1,
+            "frames": 279,
+            "base_hp": 6,
+            "coins": 20
+          }
+        ],
+        "kills": 4,
+        "leaks": 0,
+        "invested": 60,
+        "end_coins": 20
+      },
+      {
+        "map": 2,
+        "name": "RIVER BEND",
+        "start_frame": 608,
+        "starting_coins": 100,
+        "waves": [
+          {
+            "wave": 1,
+            "frames": 267,
+            "base_hp": 6,
+            "coins": 20
+          },
+          {
+            "wave": 2,
+            "frames": 459,
+            "base_hp": 6,
+            "coins": 30
+          }
+        ],
+        "kills": 14,
+        "leaks": 0,
+        "invested": 120,
+        "end_coins": 30
+      },
+      {
+        "map": 3,
+        "name": "FROST PASS",
+        "start_frame": 1861,
+        "starting_coins": 170,
+        "waves": [
+          {
+            "wave": 1,
+            "frames": 327,
+            "base_hp": 6,
+            "coins": 35
+          },
+          {
+            "wave": 2,
+            "frames": 543,
+            "base_hp": 6,
+            "coins": 50
+          }
+        ],
+        "kills": 26,
+        "leaks": 0,
+        "invested": 180,
+        "end_coins": 50
+      },
+      {
+        "map": 4,
+        "name": "BRAMBLE WAY",
+        "start_frame": 3260,
+        "starting_coins": 250,
+        "waves": [
+          {
+            "wave": 1,
+            "frames": 303,
+            "base_hp": 6,
+            "coins": 35
+          },
+          {
+            "wave": 2,
+            "frames": 447,
+            "base_hp": 6,
+            "coins": 50
+          }
+        ],
+        "kills": 38,
+        "leaks": 0,
+        "invested": 260,
+        "end_coins": 50
+      },
+      {
+        "map": 5,
+        "name": "AMBER ROAD",
+        "start_frame": 4717,
+        "starting_coins": 330,
+        "waves": [
+          {
+            "wave": 1,
+            "frames": 327,
+            "base_hp": 6,
+            "coins": 40
+          },
+          {
+            "wave": 2,
+            "frames": 483,
+            "base_hp": 6,
+            "coins": 60
+          }
+        ],
+        "kills": 52,
+        "leaks": 0,
+        "invested": 340,
+        "end_coins": 60
+      },
+      {
+        "map": 6,
+        "name": "EMBER STEPS",
+        "start_frame": 6512,
+        "starting_coins": 420,
+        "waves": [
+          {
+            "wave": 1,
+            "frames": 315,
+            "base_hp": 6,
+            "coins": 70
+          },
+          {
+            "wave": 2,
+            "frames": 435,
+            "base_hp": 6,
+            "coins": 110
+          }
+        ],
+        "kills": 66,
+        "leaks": 0,
+        "invested": 380,
+        "end_coins": 110
+      },
+      {
+        "map": 7,
+        "name": "MOON CROSS",
+        "start_frame": 8204,
+        "starting_coins": 510,
+        "waves": [
+          {
+            "wave": 1,
+            "frames": 375,
+            "base_hp": 6,
+            "coins": 165
+          },
+          {
+            "wave": 2,
+            "frames": 495,
+            "base_hp": 6,
+            "coins": 210
+          }
+        ],
+        "kills": 82,
+        "leaks": 0,
+        "invested": 380,
+        "end_coins": 210
+      },
+      {
+        "map": 8,
+        "name": "GLASS MAZE",
+        "start_frame": 9904,
+        "starting_coins": 610,
+        "waves": [
+          {
+            "wave": 1,
+            "frames": 327,
+            "base_hp": 6,
+            "coins": 265
+          },
+          {
+            "wave": 2,
+            "frames": 471,
+            "base_hp": 6,
+            "coins": 310
+          }
+        ],
+        "kills": 98,
+        "leaks": 0,
+        "invested": 380,
+        "end_coins": 310
+      },
+      {
+        "map": 9,
+        "name": "ASHEN TRAIL",
+        "start_frame": 11740,
+        "starting_coins": 710,
+        "waves": [
+          {
+            "wave": 1,
+            "frames": 375,
+            "base_hp": 6,
+            "coins": 370
+          },
+          {
+            "wave": 2,
+            "frames": 447,
+            "base_hp": 6,
+            "coins": 420
+          }
+        ],
+        "kills": 116,
+        "leaks": 0,
+        "invested": 380,
+        "end_coins": 420
+      },
+      {
+        "map": 10,
+        "name": "WARDEN KEEP",
+        "start_frame": 13440,
+        "starting_coins": 820,
+        "waves": [
+          {
+            "wave": 1,
+            "frames": 327,
+            "base_hp": 6,
+            "coins": 480
+          },
+          {
+            "wave": 2,
+            "frames": 471,
+            "base_hp": 6,
+            "coins": 530
+          },
+          {
+            "wave": 3,
+            "frames": 567,
+            "base_hp": 6,
+            "coins": 590
+          }
+        ],
+        "kills": 146,
+        "leaks": 0,
+        "invested": 380,
+        "end_coins": 590
+      }
+    ],
+    "kills": 146,
+    "leaks": 0,
+    "waves": 20,
+    "coins": 590,
+    "demo_clips": [],
+    "video_has_cuts": true,
+    "state_writes": 0,
+    "input_replay_verified": true
+  },
+  "physical_hardware_tested": false
+}
