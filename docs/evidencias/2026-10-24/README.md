@@ -48,4 +48,4 @@ make package
 
 Os resultados novos ficam em `build/test-results/`. Esta pasta preserva a seleção estável da versão 0.2.0. A [versão 0.1.0](../2026-10-23/README.md) mantém suas próprias evidências.
 
-A [release v0.2.0](https://github.com/AlanHJH/gba-assembly-ai/releases/tag/v0.2.0) distribui ROM, checksum, MP4 e artigo exportado. As verificações de integração contínua e downloads públicos são registradas ao concluir a publicação, sem inferir seu sucesso apenas da existência de links.
+A [release v0.2.0](https://github.com/AlanHJH/gba-assembly-ai/releases/tag/v0.2.0) distribui ROM, checksum, MP4 e artigo exportado. A [execução de CI](https://github.com/AlanHJH/gba-assembly-ai/actions/runs/40062903449) passou no Ubuntu 24.04 e produziu o mesmo SHA-256 local. O [registro de CI](ci.json) identifica o commit testado e a comparação. Os downloads públicos são conferidos ao concluir a publicação.

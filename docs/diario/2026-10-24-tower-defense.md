@@ -76,3 +76,9 @@ Revisar o tutorial e a economia com jogadores, testar em hardware e fazer revis�
 ## Construção limpa e pacote final local
 
 `make clean` foi seguido de nova geração dos recursos e montagem. A campanha e a reprodução integral dos botões passaram. Depois da inclusão dos JSONs no índice de evidências, `make package` passou nos quinze grupos e na verificação dos 25 documentos Markdown. ROM: 22.520 bytes, SHA-256 `96e8e02ae5e066ed0765a75814b7d418a0ea0dbbf9a2527318679e3141e3a3aa`. O pacote copiou essa mesma ROM para `dist/gateblade-v0.2.0.gba` e exportou `dist/gateblade-artigo.md` com links da tag v0.2.0.
+
+## Verificação remota
+
+Os commits de implementação `c3150ee` e de correção visual `c0d5f33` foram enviados ao repositório público. A execução final [40062903449](https://github.com/AlanHJH/gba-assembly-ai/actions/runs/40062903449), no commit `c0d5f33517a39bd4b25fd349fe4452efb8c80204`, passou no Ubuntu 24.04. O log foi lido com `gh run view 40062903449 --log`: quinze grupos, reprodução dos botões e 25 documentos passaram; o SHA-256 coincidiu com a construção local. O [registro JSON](../evidencias/2026-10-24/ci.json) preserva essa observação.
+
+Depois da correção visual foram executados novamente `make demo`, `make verify` e `python3 tools/package.py`. A checagem dos links públicos exportados e a comparação entre ROM empacotada e relatório passaram. Uma primeira checagem ad hoc desses links teve erro de aspas em Python; foi corrigida e repetida antes de distribuir.

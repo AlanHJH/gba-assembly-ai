@@ -1,0 +1,14 @@
+{
+  "conclusion": "success",
+  "databaseId": 40062903449,
+  "headSha": "c0d5f33517a39bd4b25fd349fe4452efb8c80204",
+  "status": "completed",
+  "url": "https://github.com/AlanHJH/gba-assembly-ai/actions/runs/40062903449",
+  "runner": "ubuntu-24.04",
+  "rom_sha256": "96e8e02ae5e066ed0765a75814b7d418a0ea0dbbf9a2527318679e3141e3a3aa",
+  "rom_bytes": 22520,
+  "matches_local_build": true,
+  "game_check_groups": 15,
+  "input_replay_verified": true,
+  "physical_hardware_tested": false
+}
