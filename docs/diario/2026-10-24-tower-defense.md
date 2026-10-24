@@ -82,3 +82,18 @@ Revisar o tutorial e a economia com jogadores, testar em hardware e fazer revis�
 Os commits de implementação `c3150ee` e de correção visual `c0d5f33` foram enviados ao repositório público. A execução final [40062903449](https://github.com/AlanHJH/gba-assembly-ai/actions/runs/40062903449), no commit `c0d5f33517a39bd4b25fd349fe4452efb8c80204`, passou no Ubuntu 24.04. O log foi lido com `gh run view 40062903449 --log`: quinze grupos, reprodução dos botões e 25 documentos passaram; o SHA-256 coincidiu com a construção local. O [registro JSON](../evidencias/2026-10-24/ci.json) preserva essa observação.
 
 Depois da correção visual foram executados novamente `make demo`, `make verify` e `python3 tools/package.py`. A checagem dos links públicos exportados e a comparação entre ROM empacotada e relatório passaram. Uma primeira checagem ad hoc desses links teve erro de aspas em Python; foi corrigida e repetida antes de distribuir.
+
+## Publicação e conferência pública
+
+A tag `v0.2.0` foi criada no commit documental `d01a5e5`, após conferir com `git diff --exit-code c0d5f33 -- src tools Makefile assets VERSION` que o código e os dados coincidiam com o commit testado no Linux. A release pública [Gateblade TD v0.2.0](https://github.com/AlanHJH/gba-assembly-ai/releases/tag/v0.2.0) distribui ROM, checksum, MP4, GIF e artigo exportado.
+
+Comandos de publicação executados:
+
+```sh
+git tag -a v0.2.0 -m "Gateblade TD v0.2.0: ten-map assembly campaign"
+git push origin codex/foundation v0.2.0
+gh release create v0.2.0 dist/gateblade-v0.2.0.gba dist/gateblade-v0.2.0.sha256 build/test-results/gateblade-demo.mp4 build/test-results/gateblade-demo.gif dist/gateblade-artigo.md --verify-tag --title "Gateblade TD v0.2.0 — dez mapas de defesa" --notes-file build/release-v0.2.0.md
+gh release view v0.2.0 --json url,isDraft,isPrerelease,tagName,assets
+```
+
+Uma verificação por `urllib.request`, sem cabeçalho de autenticação, baixou ROM, checksum e artigo da release: HTTP 200 e igualdade byte a byte com `dist/`. O artigo exportado contém somente links públicos, com referências locais convertidas para a tag v0.2.0. Imagem e relatório acessados por links versionados também responderam HTTP 200. O [registro da release](../evidencias/2026-10-24/release.json) preserva URLs, tamanhos e hashes dos downloads conferidos. Não houve publicação no blog.

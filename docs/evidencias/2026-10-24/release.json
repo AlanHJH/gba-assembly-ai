@@ -1,0 +1,59 @@
+{
+  "release_url": "https://github.com/AlanHJH/gba-assembly-ai/releases/tag/v0.2.0",
+  "tag": "v0.2.0",
+  "public": true,
+  "assets": [
+    {
+      "name": "gateblade-artigo.md",
+      "size": 14699,
+      "url": "https://github.com/AlanHJH/gba-assembly-ai/releases/download/v0.2.0/gateblade-artigo.md"
+    },
+    {
+      "name": "gateblade-demo.gif",
+      "size": 327321,
+      "url": "https://github.com/AlanHJH/gba-assembly-ai/releases/download/v0.2.0/gateblade-demo.gif"
+    },
+    {
+      "name": "gateblade-demo.mp4",
+      "size": 513715,
+      "url": "https://github.com/AlanHJH/gba-assembly-ai/releases/download/v0.2.0/gateblade-demo.mp4"
+    },
+    {
+      "name": "gateblade-v0.2.0.gba",
+      "size": 22520,
+      "url": "https://github.com/AlanHJH/gba-assembly-ai/releases/download/v0.2.0/gateblade-v0.2.0.gba"
+    },
+    {
+      "name": "gateblade-v0.2.0.sha256",
+      "size": 87,
+      "url": "https://github.com/AlanHJH/gba-assembly-ai/releases/download/v0.2.0/gateblade-v0.2.0.sha256"
+    }
+  ],
+  "anonymous_download_checks": [
+    {
+      "name": "gateblade-v0.2.0.gba",
+      "http_status": 200,
+      "bytes": 22520,
+      "sha256": "96e8e02ae5e066ed0765a75814b7d418a0ea0dbbf9a2527318679e3141e3a3aa",
+      "matches_local": true,
+      "authentication_used": false
+    },
+    {
+      "name": "gateblade-v0.2.0.sha256",
+      "http_status": 200,
+      "bytes": 87,
+      "sha256": "8967b60e5355f41c8bfc3d682d271e9b5530cc599d314e1a12e8e1060ad8526a",
+      "matches_local": true,
+      "authentication_used": false
+    },
+    {
+      "name": "gateblade-artigo.md",
+      "http_status": 200,
+      "bytes": 14699,
+      "sha256": "e1491e9f63f6ee7d498ef43b2a27e0f0223107b455a96447c1f06d3654296c15",
+      "matches_local": true,
+      "authentication_used": false
+    }
+  ],
+  "versioned_article_references_accessible": true
+}
